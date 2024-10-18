@@ -5,53 +5,55 @@ import 'package:biblia/src/repositories/database_repository.dart';
 import 'package:flutter/material.dart';
 
 class DatabaseController extends ChangeNotifier {
-  final DatabaseRepository databaseRepository;
-  DatabaseController(this.databaseRepository);
+  final DatabaseRepository _databaseRepository;
+  DatabaseController(this._databaseRepository);
 
   List<Book> _books = [];
   List<Verse> _verses = [];
   List<Testament> _testaments = [];
+  bool _isLoading = false;
 
+  bool get isLoading => _isLoading;
   List<Book> get books => _books;
   List<Verse> get verses => _verses;
   List<Testament> get testaments => _testaments;
 
   Future<void> getBooks() async {
-    bool isLoading = true;
+    _isLoading = true;
     var error = null;
 
     try {
-      _books = await databaseRepository.getBooks();
+      _books = await _databaseRepository.getBooks();
     } catch (e) {
       error = e.toString();
     } finally {
-      isLoading = false;
+      _isLoading = false;
       notifyListeners();
     }
   }
 
   Future<void> getVerses() async {
-    bool isLoading = true;
+    _isLoading = true;
     var error = null;
     try {
-      _verses = await databaseRepository.getVerses();
+      _verses = await _databaseRepository.getVerses();
     } catch (e) {
       error = e.toString();
     } finally {
-      isLoading = false;
+      _isLoading = false;
       notifyListeners();
     }
   }
 
   Future<void> getTestaments() async {
-    bool isLoading = true;
+    _isLoading = true;
     var error = null;
     try {
-      _testaments = await databaseRepository.getTestaments();
+      _testaments = await _databaseRepository.getTestaments();
     } catch (e) {
       error = e.toString();
     } finally {
-      isLoading = false;
+      _isLoading = false;
       notifyListeners();
     }
   }

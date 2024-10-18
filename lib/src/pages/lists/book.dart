@@ -14,7 +14,8 @@ class ListBooksPage extends StatefulWidget {
 
 class _ListBooksPageState extends State<ListBooksPage> {
   late final controller = DatabaseController(FallbackDatabaseRepository());
-  static const double tileHeight = 200;
+  final double tileHeight =
+      (Platform.isWindows || Platform.isLinux || kIsWeb) ? 200 : 150;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class _ListBooksPageState extends State<ListBooksPage> {
                   crossAxisCount:
                       (Platform.isWindows || Platform.isLinux || kIsWeb)
                           ? 4
-                          : 3,
+                          : 2,
                   mainAxisSpacing: 0,
                   crossAxisSpacing: 0,
                   mainAxisExtent: tileHeight,
@@ -50,7 +51,11 @@ class _ListBooksPageState extends State<ListBooksPage> {
                         color: Colors.grey,
                       ),
                     ),
-                    child: Center(child: Text(controller.books[index].name)),
+                    child: Center(
+                      child: Text(
+                        controller.books[index].name,
+                      ),
+                    ),
                   ),
                 ),
               ),

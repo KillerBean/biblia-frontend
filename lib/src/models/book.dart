@@ -1,21 +1,25 @@
-class Bible {
+class Book {
+  int id;
   int bookReferenceId;
   int testamentReferenceId;
   String name;
 
-  Bible({
+  Book({
+    required this.id,
     required this.bookReferenceId,
     required this.testamentReferenceId,
     required this.name,
   });
 
-  Bible.fromMap(Map<String, dynamic> res)
-      : bookReferenceId = res["book_reference_id"],
+  Book.fromMap(Map<String, dynamic> res)
+      : id = res["id"],
+        bookReferenceId = res["book_reference_id"],
         testamentReferenceId = res["testament_reference_id"],
         name = res["name"];
 
   Map<String, Object?> toMap() {
     return {
+      'id': id,
       'bookReferenceId': bookReferenceId,
       'testamentReferenceId': testamentReferenceId,
       'name': name

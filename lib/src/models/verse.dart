@@ -1,11 +1,11 @@
-class Book {
+class Verse {
   int id;
   int bookId;
   int chapter;
   int verse;
   String text;
 
-  Book({
+  Verse({
     required this.id,
     required this.bookId,
     required this.chapter,
@@ -13,7 +13,7 @@ class Book {
     required this.text,
   });
 
-  Book.fromMap(Map<String, dynamic> res)
+  Verse.fromMap(Map<String, dynamic> res)
       : id = res["id"],
         bookId = res["book_id"],
         chapter = res["chapter"],

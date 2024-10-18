@@ -1,7 +1,5 @@
-import 'package:biblia/src/controllers/database_controller.dart';
 import 'package:biblia/src/pages/lists/book.dart';
 import 'package:biblia/src/repos/db/db.dart';
-import 'package:biblia/src/repositories/fallback_database_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -41,14 +39,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late final controller = DatabaseController(FallbackDatabaseRepository());
-
-  @override
-  void initState() {
-    super.initState();
-    controller.getBooks();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,11 +50,6 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           ListBooksPage(),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async => await controller.getBooks(),
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:biblia/src/models/book.dart';
 import 'package:biblia/src/models/testament.dart';
 import 'package:biblia/src/models/verse.dart';
@@ -20,7 +22,7 @@ class DatabaseController with ChangeNotifier {
 
   Future<void> getBooks() async {
     _isLoading = true;
-    var error;
+    String error;
 
     try {
       _books = await _databaseRepository.getBooks();
@@ -34,7 +36,7 @@ class DatabaseController with ChangeNotifier {
 
   Future<void> getVerses() async {
     _isLoading = true;
-    var error;
+    String error;
     try {
       _verses = await _databaseRepository.getVerses();
     } catch (e) {
@@ -47,7 +49,7 @@ class DatabaseController with ChangeNotifier {
 
   Future<void> getTestaments() async {
     _isLoading = true;
-    var error;
+    String error;
     try {
       _testaments = await _databaseRepository.getTestaments();
     } catch (e) {

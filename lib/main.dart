@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:biblia/src/controllers/database_controller.dart';
 import 'package:biblia/src/repos/db/db.dart';
 import 'package:biblia/src/repositories/fallback_database_repository.dart';
@@ -16,7 +14,6 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -71,30 +68,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Container(
                           width: double.maxFinite,
                           height: double.maxFinite,
-                          // color: const Color.fromRGBO(218, 0, 0, 1),
                           decoration: BoxDecoration(
                             color: Colors.black26,
-                            // borderRadius: BorderRadius.circular(15)
                           ),
-                          // tileColor: Colors.red,
-                          // key: UniqueKey(),
                           child:
                               Center(child: Text(controller.books[index].name)),
-                          // title: Center(child: Text(controller.books[index].name)),
                         ),
                       ))
-              // ListView.builder(
-              //   itemCount: controller.books.length,
-              //   itemBuilder: (_, index) => ListTile(
-              //     leading: CircleAvatar(
-              //       child: Center(
-              //         child: Text("${controller.books[index].bookReferenceId}"),
-              //       ),
-              //     ),
-              //     key: UniqueKey(),
-              //     title: Text(controller.books[index].name),
-              //   ),
-              // ),
               : const CircularProgressIndicator()),
       floatingActionButton: FloatingActionButton(
         onPressed: () async => await controller.getBooks(),

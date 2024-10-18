@@ -1,4 +1,5 @@
 import 'package:biblia/src/controllers/database_controller.dart';
+import 'package:biblia/src/pages/lists/book.dart';
 import 'package:biblia/src/repos/db/db.dart';
 import 'package:biblia/src/repositories/fallback_database_repository.dart';
 import 'package:flutter/material.dart';
@@ -57,36 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Stack(
         children: [
-          ListenableBuilder(
-            listenable: controller,
-            builder: (_, __) {
-              return Center(
-                child: controller.books.isNotEmpty
-                    ? GridView.builder(
-                        itemCount: controller.books.length,
-                        shrinkWrap: true,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 0,
-                          crossAxisSpacing: 0,
-                        ),
-                        itemBuilder: (_, index) => Center(
-                          child: Container(
-                            width: double.maxFinite,
-                            height: double.maxFinite,
-                            decoration: const BoxDecoration(
-                              color: Colors.black26,
-                            ),
-                            child: Center(
-                                child: Text(controller.books[index].name)),
-                          ),
-                        ),
-                      )
-                    : const CircularProgressIndicator(),
-              );
-            },
-          ),
+          ListBooksPage(),
         ],
       ),
       floatingActionButton: FloatingActionButton(

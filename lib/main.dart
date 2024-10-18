@@ -7,7 +7,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   WakelockPlus.enable();
-  await DatabaseRetriever.instance;
+  DatabaseRetriever.instance;
   runApp(const MyApp());
 }
 
@@ -41,6 +41,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late final controller = DatabaseController(FallbackDatabaseRepository());
+
   @override
   void initState() {
     super.initState();
@@ -54,28 +55,40 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
-          child: controller.books.isNotEmpty
-              ? GridView.builder(
-                  itemCount: controller.books.length,
-                  shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 0,
-                    crossAxisSpacing: 0,
-                  ),
-                  itemBuilder: (_, index) => Center(
-                        child: Container(
-                          width: double.maxFinite,
-                          height: double.maxFinite,
-                          decoration: BoxDecoration(
-                            color: Colors.black26,
-                          ),
-                          child:
-                              Center(child: Text(controller.books[index].name)),
+      body: Stack(
+        children: [
+          ListenableBuilder(
+            listenable: controller,
+            builder: (_, __) {
+              return Center(
+                child: controller.books.isNotEmpty
+                    ? GridView.builder(
+                        itemCount: controller.books.length,
+                        shrinkWrap: true,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 0,
+                          crossAxisSpacing: 0,
                         ),
-                      ))
-              : const CircularProgressIndicator()),
+                        itemBuilder: (_, index) => Center(
+                          child: Container(
+                            width: double.maxFinite,
+                            height: double.maxFinite,
+                            decoration: const BoxDecoration(
+                              color: Colors.black26,
+                            ),
+                            child: Center(
+                                child: Text(controller.books[index].name)),
+                          ),
+                        ),
+                      )
+                    : const CircularProgressIndicator(),
+              );
+            },
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async => await controller.getBooks(),
         tooltip: 'Increment',

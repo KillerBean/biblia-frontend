@@ -4,7 +4,7 @@ import 'package:biblia/src/models/verse.dart';
 import 'package:biblia/src/repositories/database_repository.dart';
 import 'package:flutter/material.dart';
 
-class DatabaseController extends ChangeNotifier {
+class DatabaseController with ChangeNotifier {
   final DatabaseRepository _databaseRepository;
   DatabaseController(this._databaseRepository);
 
@@ -20,7 +20,7 @@ class DatabaseController extends ChangeNotifier {
 
   Future<void> getBooks() async {
     _isLoading = true;
-    var error = null;
+    var error;
 
     try {
       _books = await _databaseRepository.getBooks();
@@ -34,7 +34,7 @@ class DatabaseController extends ChangeNotifier {
 
   Future<void> getVerses() async {
     _isLoading = true;
-    var error = null;
+    var error;
     try {
       _verses = await _databaseRepository.getVerses();
     } catch (e) {
@@ -47,7 +47,7 @@ class DatabaseController extends ChangeNotifier {
 
   Future<void> getTestaments() async {
     _isLoading = true;
-    var error = null;
+    var error;
     try {
       _testaments = await _databaseRepository.getTestaments();
     } catch (e) {

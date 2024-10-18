@@ -24,7 +24,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 0, 0, 160)),
+          seedColor: const Color.fromARGB(255, 7, 85, 0),
+        ),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -45,7 +46,6 @@ class _MyHomePageState extends State<MyHomePage> {
   late final controller = DatabaseController(FallbackDatabaseRepository());
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     controller.getBooks();
   }
@@ -58,40 +58,46 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-          child: GridView.builder(
-              itemCount: controller.books.length,
-              shrinkWrap: true,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 0,
-                crossAxisSpacing: 0,
-              ),
-              itemBuilder: (_, index) => Center(
-                    child: Container(
-                      width: double.maxFinite,
-                      height: double.maxFinite,
-                      color: Colors.red,
-                      // tileColor: Colors.red,
-                      // key: UniqueKey(),
-                      child: Center(child: Text(controller.books[index].name)),
-                      // title: Center(child: Text(controller.books[index].name)),
-                    ),
-                  ))
-          // ListView.builder(
-          //   itemCount: controller.books.length,
-          //   itemBuilder: (_, index) => ListTile(
-          //     leading: CircleAvatar(
-          //       child: Center(
-          //         child: Text("${controller.books[index].bookReferenceId}"),
-          //       ),
-          //     ),
-          //     key: UniqueKey(),
-          //     title: Text(controller.books[index].name),
-          //   ),
-          // ),
-          ),
+          child: controller.books.isNotEmpty
+              ? GridView.builder(
+                  itemCount: controller.books.length,
+                  shrinkWrap: true,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 0,
+                    crossAxisSpacing: 0,
+                  ),
+                  itemBuilder: (_, index) => Center(
+                        child: Container(
+                          width: double.maxFinite,
+                          height: double.maxFinite,
+                          // color: const Color.fromRGBO(218, 0, 0, 1),
+                          decoration: BoxDecoration(
+                            color: Colors.black26,
+                            // borderRadius: BorderRadius.circular(15)
+                          ),
+                          // tileColor: Colors.red,
+                          // key: UniqueKey(),
+                          child:
+                              Center(child: Text(controller.books[index].name)),
+                          // title: Center(child: Text(controller.books[index].name)),
+                        ),
+                      ))
+              // ListView.builder(
+              //   itemCount: controller.books.length,
+              //   itemBuilder: (_, index) => ListTile(
+              //     leading: CircleAvatar(
+              //       child: Center(
+              //         child: Text("${controller.books[index].bookReferenceId}"),
+              //       ),
+              //     ),
+              //     key: UniqueKey(),
+              //     title: Text(controller.books[index].name),
+              //   ),
+              // ),
+              : const CircularProgressIndicator()),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => controller.getBooks(),
+        onPressed: () async => await controller.getBooks(),
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),

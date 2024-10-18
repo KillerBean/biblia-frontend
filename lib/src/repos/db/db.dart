@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class DatabaseRetriever {
   late Future<Database> _db;
@@ -13,6 +14,15 @@ class DatabaseRetriever {
   static DatabaseRetriever instance = DatabaseRetriever._();
 
   Future<Database> loadDatabase() async {
+    if (Platform.isWindows || Platform.isLinux) {
+      // Initialize FFI
+      sqfliteFfiInit();
+    }
+
+    // Change the default factory. On iOS/Android, if not using `sqlite_flutter_lib` you can forget
+    // this step, it will use the sqlite version available on the system.
+    databaseFactory = databaseFactoryFfi;
+
     String databasesPath = await getDatabasesPath();
     String path = join(databasesPath, "ARC.db");
 

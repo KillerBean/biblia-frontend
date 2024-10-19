@@ -5,10 +5,11 @@ import 'package:biblia/src/models/testament.dart';
 import 'package:biblia/src/models/verse.dart';
 import 'package:biblia/src/repositories/database_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class DatabaseController with ChangeNotifier {
-  final DatabaseRepository _databaseRepository;
-  DatabaseController(this._databaseRepository);
+  final DatabaseRepository _databaseRepository =
+      Modular.get<DatabaseRepository>();
 
   List<Book> _books = [];
   List<Verse> _verses = [];

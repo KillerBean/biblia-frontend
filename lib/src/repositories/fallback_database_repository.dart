@@ -6,7 +6,7 @@ import 'package:biblia/src/repositories/database_repository.dart';
 
 class FallbackDatabaseRepository extends DatabaseRepository {
   @override
-  Future<List<Book>> getBooks() async {
+  Future<List<Book>> getBooks({int? testament}) async {
     List<Book> books = [];
     final rawBooks = await (await DatabaseRetriever.instance.db).query("book",
         columns: ["id", "book_reference_id", "testament_reference_id", "name"]);
@@ -28,7 +28,7 @@ class FallbackDatabaseRepository extends DatabaseRepository {
   }
 
   @override
-  Future<List<Verse>> getVerses() async {
+  Future<List<Verse>> getVerses({int? chapter}) async {
     List<Verse> verses = [];
     final rawVerses = await (await DatabaseRetriever.instance.db)
         .query("book", columns: ["id", "book_id", "chapter", "verse", "text"]);

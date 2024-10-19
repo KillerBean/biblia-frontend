@@ -1,5 +1,6 @@
 import 'package:biblia/src/controllers/database_controller.dart';
-import 'package:biblia/src/pages/widgets/my_homepage_widget.dart';
+import 'package:biblia/src/modules/book_module.dart';
+import 'package:biblia/src/pages/widgets/homepage_widget.dart';
 import 'package:biblia/src/repos/db/db.dart';
 import 'package:biblia/src/repositories/database_repository.dart';
 import 'package:biblia/src/repositories/fallback_database_repository.dart';
@@ -26,6 +27,7 @@ class AppModule extends Module {
   void routes(r) {
     r.child('/',
         child: (context) =>
-            const MyHomePageWidget(title: 'Flutter Demo Home Page'));
+            const HomePageWidget(title: 'Flutter Demo Home Page'));
+    r.module("/book", module: BookModule());
   }
 }

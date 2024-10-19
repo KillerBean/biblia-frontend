@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:biblia/src/controllers/database_controller.dart';
+import 'package:biblia/src/pages/widgets/list_items_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -29,39 +30,10 @@ class _ListBooksPageState extends State<ListBooksPage> {
               const CircularProgressIndicator();
             }
 
-            return Center(
-              child: GridView.builder(
-                itemCount: controller.books.length,
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount:
-                      (Platform.isWindows || Platform.isLinux || kIsWeb)
-                          ? 4
-                          : 2,
-                  mainAxisSpacing: 0,
-                  crossAxisSpacing: 0,
-                  mainAxisExtent: tileHeight,
-                ),
-                itemBuilder: (_, index) => GestureDetector(
-                  onTap: () => print(index + 1),
-                  child: Center(
-                    child: Container(
-                      width: double.maxFinite,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 167, 167, 167),
-                        border: Border.all(
-                          color: Colors.grey,
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          controller.books[index].name,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+            return ListItemsWidget(
+              items: controller.books,
+              path: "book",
+              fieldName: "name",
             );
           },
         );

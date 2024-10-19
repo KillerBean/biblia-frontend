@@ -13,12 +13,14 @@ class DatabaseController with ChangeNotifier {
 
   List<Book> _books = [];
   List<Verse> _verses = [];
+  int _chapters = 0;
   List<Testament> _testaments = [];
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
   List<Book> get books => _books;
   List<Verse> get verses => _verses;
+  int get numChapters => _chapters;
   List<Testament> get testaments => _testaments;
 
   Future<void> getBooks() async {
@@ -35,11 +37,25 @@ class DatabaseController with ChangeNotifier {
     }
   }
 
-  Future<void> getVerses() async {
+  Future<void> getVerses({int? bookId, int? chapterId}) async {
     _isLoading = true;
     String error;
     try {
-      _verses = await _databaseRepository.getVerses();
+      _verses = await _databaseRepository.getVerses(
+          bookId: bookId, chapterId: chapterId);
+    } catch (e) {
+      error = e.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> getChapters({required int bookId}) async {
+    _isLoading = true;
+    String error;
+    try {
+      _chapters = await _databaseRepository.getChapters(bookId: bookId);
     } catch (e) {
       error = e.toString();
     } finally {

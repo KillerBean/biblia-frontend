@@ -28,10 +28,18 @@ class FallbackDatabaseRepository extends DatabaseRepository {
   }
 
   @override
-  Future<List<Verse>> getVerses({int? chapter}) async {
+  Future<int> getChapters({required int bookId}) async {
+    final rawVerses = await (await DatabaseRetriever.instance.db).rawQuery(
+        "SELECT * FROM verse WHERE book_id = ? GROUP BY chapter", [bookId]);
+
+    return rawVerses.length;
+  }
+
+  @override
+  Future<List<Verse>> getVerses({int? chapterId, int? bookId}) async {
     List<Verse> verses = [];
     final rawVerses = await (await DatabaseRetriever.instance.db)
-        .query("book", columns: ["id", "book_id", "chapter", "verse", "text"]);
+        .query("verse", columns: ["id", "book_id", "chapter", "verse", "text"]);
     for (final item in rawVerses) {
       verses.add(Verse.fromMap(item));
     }

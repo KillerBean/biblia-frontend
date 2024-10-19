@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:biblia/src/controllers/database_controller.dart';
-import 'package:biblia/src/pages/widgets/list_items_widget.dart';
+import 'package:biblia/src/pages/widgets/grid_list_items_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -30,7 +30,7 @@ class _ListBooksPageState extends State<ListBooksPage> {
               const CircularProgressIndicator();
             }
 
-            return ListItemsWidget(
+            return GridListItemsWidget(
               items: controller.books,
               path: "book",
               fieldName: "name",

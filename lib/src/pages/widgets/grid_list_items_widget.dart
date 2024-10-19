@@ -4,20 +4,20 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-class ListItemsWidget extends StatefulWidget {
-  ListItemsWidget(
+class GridListItemsWidget extends StatefulWidget {
+  GridListItemsWidget(
       {super.key, required this.items, this.path, required this.fieldName});
-  List<dynamic> items;
-  String? path;
-  String fieldName;
+  final List<dynamic> items;
+  final String? path;
+  final String fieldName;
   final double tileHeight =
       (Platform.isWindows || Platform.isLinux || kIsWeb) ? 200 : 150;
 
   @override
-  State<ListItemsWidget> createState() => _ListItemsWidgetState();
+  State<GridListItemsWidget> createState() => _GridListItemsWidgetState();
 }
 
-class _ListItemsWidgetState extends State<ListItemsWidget> {
+class _GridListItemsWidgetState extends State<GridListItemsWidget> {
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -33,7 +33,6 @@ class _ListItemsWidgetState extends State<ListItemsWidget> {
         ),
         itemBuilder: (_, index) => GestureDetector(
           onTap: () {
-            print("/${widget.path}/${index + 1}");
             if (widget.path != null) {
               Modular.to.navigate("/${widget.path}/${index + 1}");
             }

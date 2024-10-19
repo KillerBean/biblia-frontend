@@ -39,6 +39,7 @@ dependencies:
   path: ^1.9.0
   wakelock_plus: ^1.2.8
   sqflite_common_ffi: ^2.3.4
+  flutter_modular: ^6.3.4
 
 dev_dependencies:
   flutter_test:

@@ -46,7 +46,7 @@ class _ListBooksPageState extends State<ListBooksPage> {
                   child: Container(
                     width: double.maxFinite,
                     decoration: BoxDecoration(
-                      color: Colors.black26,
+                      color: const Color.fromARGB(255, 167, 167, 167),
                       border: Border.all(
                         color: Colors.grey,
                       ),

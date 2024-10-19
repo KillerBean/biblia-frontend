@@ -1,16 +1,16 @@
 import 'package:biblia/src/pages/lists/book.dart';
 import 'package:flutter/material.dart';
 
-class MyHomePageWidget extends StatefulWidget {
-  const MyHomePageWidget({super.key, required this.title});
+class HomePageWidget extends StatefulWidget {
+  const HomePageWidget({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePageWidget> createState() => _MyHomePageWidgetState();
+  State<HomePageWidget> createState() => _HomePageWidgetState();
 }
 
-class _MyHomePageWidgetState extends State<MyHomePageWidget> {
+class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

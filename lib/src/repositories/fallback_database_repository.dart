@@ -38,8 +38,49 @@ class FallbackDatabaseRepository extends DatabaseRepository {
   @override
   Future<List<Verse>> getVerses({int? chapterId, int? bookId}) async {
     List<Verse> verses = [];
-    final rawVerses = await (await DatabaseRetriever.instance.db)
-        .query("verse", columns: ["id", "book_id", "chapter", "verse", "text"]);
+    List<dynamic> rawVerses = [];
+
+    if (bookId == null) {
+      if (chapterId == null) {
+        //busca todos os versículos
+        rawVerses = await (await DatabaseRetriever.instance.db).query("verse",
+            columns: ["id", "book_id", "chapter", "verse", "text"]);
+      }
+    } else {
+      if (chapterId == null) {
+        //busca todos os versículos de um livro específico
+        rawVerses = await (await DatabaseRetriever.instance.db)
+            .rawQuery("SELECT * FROM verse WHERE book_id = ?", [bookId]);
+      }
+      if (chapterId != null) {
+        //busca todos os versículos de um livro e capítulo específicos
+        rawVerses = await (await DatabaseRetriever.instance.db).rawQuery(
+            "SELECT * FROM verse WHERE book_id = ? AND chapter = ?",
+            [bookId, chapterId]);
+      }
+    }
+
+    /*
+     * modo antigo de maior complexidade ciclosomática
+    // if (chapterId != null && bookId == null) return [];
+
+    // if (chapterId != null && bookId != null) {
+    //   rawVerses = await (await DatabaseRetriever.instance.db).rawQuery(
+    //       "SELECT * FROM verse WHERE book_id = ? AND chapter = ?",
+    //       [bookId, chapterId]);
+    // }
+
+    // if (bookId != null && chapterId == null) {
+    //   rawVerses = await (await DatabaseRetriever.instance.db)
+    //       .rawQuery("SELECT * FROM verse WHERE book_id = ?", [bookId]);
+    // }
+
+    // if (chapterId == null && bookId == null) {
+    //   rawVerses = await (await DatabaseRetriever.instance.db)
+    //     .query("verse", columns: ["id", "book_id", "chapter", "verse", "text"]);
+    // }
+    */
+
     for (final item in rawVerses) {
       verses.add(Verse.fromMap(item));
     }

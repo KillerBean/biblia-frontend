@@ -25,7 +25,7 @@ class _BookPageWidgetState extends State<BookPageWidget> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         leading: IconButton(
-            onPressed: () => Modular.to.navigate("/"),
+            onPressed: () => Modular.to.pop(), //pushNamed("/"),
             icon: const Icon(CupertinoIcons.return_icon)),
       ),
       body: ListenableBuilder(
@@ -54,7 +54,7 @@ class _BookPageWidgetState extends State<BookPageWidget> {
                   itemBuilder: (_, index) => GestureDetector(
                     onTap: () {
                       Modular.to
-                          .navigate("/book/${widget.bookId}/${index + 1}");
+                          .pushNamed("/book/${widget.bookId}/${index + 1}");
                     },
                     child: Center(
                       child: Container(

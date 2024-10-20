@@ -34,7 +34,7 @@ class _GridListItemsWidgetState extends State<GridListItemsWidget> {
         itemBuilder: (_, index) => GestureDetector(
           onTap: () {
             if (widget.path != null) {
-              Modular.to.navigate("/${widget.path}/${index + 1}");
+              Modular.to.pushNamed("/${widget.path}/${index + 1}");
             }
           },
           child: Center(

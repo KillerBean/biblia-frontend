@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:biblia/src/controllers/database_controller.dart';
-import 'package:biblia/src/pages/widgets/text_list_items_widget.dart';
+import 'package:biblia/src/pages/lists/verse.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -20,30 +20,14 @@ class _ChapterPageWidgetState extends State<ChapterPageWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        leading: IconButton(
-            onPressed: () => Modular.to.navigate("/"),
-            icon: const Icon(CupertinoIcons.return_icon)),
-      ),
-      body: ListenableBuilder(
-        listenable: controller,
-        builder: (_, __) {
-          return FutureBuilder(
-            future: controller.getVerses(
-                bookId: widget.bookId, chapterId: widget.chapterId),
-            builder: (_, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
-                const CircularProgressIndicator();
-              }
-
-              return SizedBox.expand(
-                child: TextListItemsWidget(items: controller.verses),
-              );
-            },
-          );
-        },
-      ),
-    );
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          leading: IconButton(
+              onPressed: () =>
+                  Modular.to.pop(), //pushNamed("/book/${widget.bookId}"),
+              icon: const Icon(CupertinoIcons.return_icon)),
+        ),
+        body:
+            ListVersesPage(chapterId: widget.chapterId, bookId: widget.bookId));
   }
 }

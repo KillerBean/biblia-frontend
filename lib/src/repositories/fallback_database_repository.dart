@@ -61,7 +61,7 @@ class FallbackDatabaseRepository extends DatabaseRepository {
     }
 
     /*
-     * modo antigo de maior complexidade ciclosomática
+     * modo antigo de maior complexidade ciclomática
     // if (chapterId != null && bookId == null) return [];
 
     // if (chapterId != null && bookId != null) {

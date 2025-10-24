@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -32,7 +33,9 @@ class DatabaseRetriever {
 
     if (!exists) {
       // Should happen only the first time you launch your application
-      print("Creating new copy from asset");
+      if (kDebugMode) {
+        print("Creating new copy from asset");
+      }
 
       // Make sure the parent directory exists
       try {
@@ -47,7 +50,9 @@ class DatabaseRetriever {
       // Write and flush the bytes written
       await File(path).writeAsBytes(bytes, flush: true);
     } else {
-      print("Opening existing database");
+      if (kDebugMode) {
+        print("Opening existing database");
+      }
     }
 
     // open the database

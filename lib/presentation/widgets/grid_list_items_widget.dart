@@ -49,6 +49,14 @@ class _GridListItemsWidgetState extends State<GridListItemsWidget> {
               ),
               child: Center(
                 child: Text(
+                  style: TextStyle(
+                    fontSize: (Platform.isWindows || Platform.isLinux || kIsWeb)
+                        ? 24
+                        : 18,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                    decoration: TextDecoration.none,
+                  ),
                   (widget.items[index]).toMap()[widget.fieldName],
                 ),
               ),

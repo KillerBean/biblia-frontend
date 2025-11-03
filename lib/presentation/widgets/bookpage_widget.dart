@@ -36,19 +36,23 @@ class _BookPageWidgetState extends State<BookPageWidget> {
             return const Center(child: CircularProgressIndicator());
           }
           return Center(
+            widthFactor: 1,
+            heightFactor: 1,
             child: GridView.builder(
               itemCount: viewModel.numChapters,
               shrinkWrap: true,
+              padding: const EdgeInsets.all(0),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount:
-                    (Theme.of(context).platform == TargetPlatform.windows ||
-                            Theme.of(context).platform == TargetPlatform.linux ||
-                            Theme.of(context).platform == TargetPlatform.macOS)
-                        ? 4
-                        : 2,
+                crossAxisCount: (Theme.of(context).platform ==
+                            TargetPlatform.windows ||
+                        Theme.of(context).platform == TargetPlatform.linux ||
+                        Theme.of(context).platform == TargetPlatform.macOS)
+                    ? 8
+                    : 4,
                 mainAxisSpacing: 0,
                 crossAxisSpacing: 0,
                 mainAxisExtent: 150,
+                childAspectRatio: 1,
               ),
               itemBuilder: (_, index) => GestureDetector(
                 onTap: () {

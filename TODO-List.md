@@ -3,55 +3,56 @@
 ## 1. Melhorias de Layout e Experiência do Usuário (UI/UX)
 
 - [ ] **Temas e Paletas de Cores**
-    - [ ] Implementar Modo Escuro (Dark Mode).
-    - [ ] Adicionar paletas de cores personalizáveis (Sépia, Cinza/Ardósia).
-    - [ ] Permitir que o usuário escolha suas próprias cores de fundo e texto.
+  - [ ] Implementar Modo Escuro (Dark Mode).
+  - [ ] Adicionar paletas de cores personalizáveis (Sépia, Cinza/Ardósia).
+  - [ ] Permitir que o usuário escolha suas próprias cores de fundo e texto.
 
 - [ ] **Customização da Tipografia**
-    - [ ] Permitir a seleção de fontes (Serif, Sans-serif, etc.).
-    - [ ] Adicionar controle de tamanho do texto.
-    - [ ] Adicionar controle de espaçamento entre linhas e margens.
+  - [ ] Permitir a seleção de fontes (Serif, Sans-serif, etc.).
+  - [ ] Adicionar controle de tamanho do texto.
+  - [ ] Adicionar controle de espaçamento entre linhas e margens.
 
 - [ ] **Layout Responsivo e Adaptativo**
-    - [ ] Garantir adaptação a diferentes tamanhos de tela (celulares, tablets, desktops).
-    - [ ] Otimizar a visualização para os modos retrato e paisagem.
+  - [ ] Garantir adaptação a diferentes tamanhos de tela (celulares, tablets, desktops).
+  - [ ] Otimizar a visualização para os modos retrato e paisagem.
 
 ## 2. Funcionalidade de Busca Avançada
 
 - [ ] **Busca por Conteúdo**
-    - [ ] Implementar busca por palavra-chave ou frase.
-    - [ ] Implementar busca por referência (ex: "João 3:16") com autocompletar.
+  - [ ] Implementar busca por palavra-chave ou frase.
+  - [ ] Implementar busca por referência (ex: "João 3:16") com autocompletar.
 
 - [ ] **Filtros de Busca**
-    - [ ] Adicionar filtro por livro(s).
-    - [ ] Adicionar filtro por testamento.
-    - [ ] Adicionar filtro por coleção (Evangelhos, Cartas Paulinas, etc.).
+  - [ ] Adicionar filtro por livro(s).
+  - [ ] Adicionar filtro por testamento.
+  - [ ] Adicionar filtro por coleção (Evangelhos, Cartas Paulinas, etc.).
 
 - [ ] **Melhorias na Experiência de Busca**
-    - [ ] Salvar histórico de buscas recentes.
-    - [ ] Destacar resultados da busca no texto.
-    - [ ] Implementar busca "Fuzzy" (aproximada).
+  - [ ] Salvar histórico de buscas recentes.
+  - [ ] Destacar resultados da busca no texto.
+  - [ ] Implementar busca "Fuzzy" (aproximada).
 
 ## 3. Outras Funcionalidades Sugeridas
 
 - [ ] **Marcadores e Anotações**
-    - [ ] Permitir marcar versículos/trechos favoritos.
-    - [ ] Permitir adicionar notas pessoais.
-    - [ ] Organizar marcadores e notas por cores ou tags.
+  - [ ] Permitir marcar versículos/trechos favoritos.
+  - [ ] Permitir adicionar notas pessoais.
+  - [ ] Organizar marcadores e notas por cores ou tags.
 
 - [ ] **Planos de Leitura**
-    - [ ] Oferecer planos de leitura temáticos e anuais.
-    - [ ] Implementar notificações diárias.
+  - [ ] Oferecer planos de leitura temáticos e anuais.
+  - [ ] Implementar notificações diárias.
 
 - [ ] **Compartilhamento**
-    - [ ] Compartilhar versículo/trecho em redes sociais, mensageiros ou e-mail.
-    - [ ] Opção de compartilhar como texto ou imagem estilizada.
+  - [ ] Compartilhar versículo/trecho em redes sociais, mensageiros ou e-mail.
+  - [ ] Opção de compartilhar como texto ou imagem estilizada.
 
 - [ ] **Versão em Áudio (Text-to-Speech)**
-    - [ ] Integrar funcionalidade de leitura em voz alta.
+  - [ ] Integrar funcionalidade de leitura em voz alta.
 
 - [ ] **Acesso Offline**
-    - [ ] Permitir o download do conteúdo para uso offline.
+  - [ ] Permitir o download do conteúdo para uso offline.
 
 - [ ] **Sincronização na Nuvem**
-    - [ ] Criar contas de usuário para sincronizar dados entre dispositivos.
+  - [ ] Criar contas de usuário para sincronizar dados entre dispositivos.
+  

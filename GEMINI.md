@@ -30,7 +30,7 @@ Este documento descreve como usar o Gemini CLI para padronizar a arquitetura, co
 
 ## Estrutura de pastas recomendada (exemplo)
 
-```
+```text
 /lib
   /core
     /exceptions

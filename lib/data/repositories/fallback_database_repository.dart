@@ -3,12 +3,19 @@ import 'package:biblia/domain/entities/testament.dart';
 import 'package:biblia/domain/entities/verse.dart';
 import 'package:biblia/data/datasources/local/local_sqlite.dart';
 import 'package:biblia/domain/repositories/database_repository.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class FallbackDatabaseRepository extends DatabaseRepository {
+  final Future<Database> Function() _dbProvider;
+
+  FallbackDatabaseRepository({Future<Database> Function()? dbProvider})
+      : _dbProvider = dbProvider ?? (() => DatabaseRetriever.instance.db);
+
   @override
   Future<List<Book>> getBooks({int? testament}) async {
     List<Book> books = [];
-    final rawBooks = await (await DatabaseRetriever.instance.db).query("book",
+    final db = await _dbProvider();
+    final rawBooks = await db.query("book",
         columns: ["id", "book_reference_id", "testament_reference_id", "name"]);
     for (final item in rawBooks) {
       books.add(Book.fromMap(item));
@@ -19,8 +26,8 @@ class FallbackDatabaseRepository extends DatabaseRepository {
   @override
   Future<List<Testament>> getTestaments() async {
     List<Testament> testaments = [];
-    final rawTestaments = await (await DatabaseRetriever.instance.db)
-        .query("testament", columns: ["id", "name"]);
+    final db = await _dbProvider();
+    final rawTestaments = await db.query("testament", columns: ["id", "name"]);
     for (final item in rawTestaments) {
       testaments.add(Testament.fromMap(item));
     }
@@ -29,7 +36,8 @@ class FallbackDatabaseRepository extends DatabaseRepository {
 
   @override
   Future<int> getChapters({required int bookId}) async {
-    final rawVerses = await (await DatabaseRetriever.instance.db).rawQuery(
+    final db = await _dbProvider();
+    final rawVerses = await db.rawQuery(
         "SELECT * FROM verse WHERE book_id = ? GROUP BY chapter", [bookId]);
 
     return rawVerses.length;
@@ -39,22 +47,22 @@ class FallbackDatabaseRepository extends DatabaseRepository {
   Future<List<Verse>> getVerses({int? chapterId, int? bookId}) async {
     List<Verse> verses = [];
     List<dynamic> rawVerses = [];
+    final db = await _dbProvider();
 
     if (bookId == null) {
       if (chapterId == null) {
         //busca todos os versículos
-        rawVerses = await (await DatabaseRetriever.instance.db).query("verse",
+        rawVerses = await db.query("verse",
             columns: ["id", "book_id", "chapter", "verse", "text"]);
       }
     } else {
       if (chapterId == null) {
         //busca todos os versículos de um livro específico
-        rawVerses = await (await DatabaseRetriever.instance.db)
-            .rawQuery("SELECT * FROM verse WHERE book_id = ?", [bookId]);
+        rawVerses = await db.rawQuery("SELECT * FROM verse WHERE book_id = ?", [bookId]);
       }
       if (chapterId != null) {
         //busca todos os versículos de um livro e capítulo específicos
-        rawVerses = await (await DatabaseRetriever.instance.db).rawQuery(
+        rawVerses = await db.rawQuery(
             "SELECT * FROM verse WHERE book_id = ? AND chapter = ?",
             [bookId, chapterId]);
       }

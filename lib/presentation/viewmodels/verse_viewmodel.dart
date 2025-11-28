@@ -9,20 +9,23 @@ class VerseViewModel extends ChangeNotifier {
 
   List<Verse> _verses = [];
   bool _isLoading = false;
+  String? _errorMessage;
 
   bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
   List<Verse> get verses => _verses;
 
   Future<void> getVerses({int? bookId, int? chapterId}) async {
     _isLoading = true;
+    _errorMessage = null;
     notifyListeners();
     
     try {
       _verses =
           await _getVersesUseCase(bookId: bookId, chapterId: chapterId);
     } catch (e) {
-          // TODO: Handle error
-        } finally {
+      _errorMessage = "Falha ao carregar versículos: $e";
+    } finally {
       _isLoading = false;
       notifyListeners();
     }

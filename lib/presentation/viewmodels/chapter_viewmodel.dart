@@ -8,19 +8,22 @@ class ChapterViewModel extends ChangeNotifier {
 
   int _chapters = 0;
   bool _isLoading = false;
+  String? _errorMessage;
 
   bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
   int get numChapters => _chapters;
 
   Future<void> getChapters({required int bookId}) async {
     _isLoading = true;
+    _errorMessage = null;
     notifyListeners();
     
     try {
       _chapters = await _getChaptersUseCase(bookId: bookId);
     } catch (e) {
-          // TODO: Handle error
-        } finally {
+      _errorMessage = "Falha ao carregar capítulos: $e";
+    } finally {
       _isLoading = false;
       notifyListeners();
     }

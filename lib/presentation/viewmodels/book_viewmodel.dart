@@ -13,18 +13,21 @@ class BookViewModel extends ChangeNotifier {
   List<Book> _books = [];
   List<Testament> _testaments = [];
   bool _isLoading = false;
+  String? _errorMessage;
 
   bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
   List<Book> get books => _books;
   List<Testament> get testaments => _testaments;
 
   Future<void> getBooks() async {
     _isLoading = true;
+    _errorMessage = null;
     notifyListeners();
     try {
       _books = await _getBooksUseCase();
     } catch (e) {
-      // TODO: Handle error
+      _errorMessage = "Falha ao carregar livros: $e";
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -33,12 +36,13 @@ class BookViewModel extends ChangeNotifier {
 
   Future<void> getTestaments() async {
     _isLoading = true;
+    _errorMessage = null;
     notifyListeners();
 
     try {
       _testaments = await _getTestamentsUseCase();
     } catch (e) {
-      // TODO: Handle error
+      _errorMessage = "Falha ao carregar testamentos: $e";
     } finally {
       _isLoading = false;
       notifyListeners();

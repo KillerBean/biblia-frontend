@@ -66,5 +66,33 @@ void main() {
         expect(bookViewModel.isLoading, isFalse);
       });
     });
+
+    test('getBooks should set errorMessage when an exception occurs', () async {
+      // Arrange
+      final exception = Exception('Database error');
+      when(mockGetBooksUseCase.call()).thenThrow(exception);
+
+      // Act
+      await bookViewModel.getBooks();
+
+      // Assert
+      expect(bookViewModel.books, isEmpty);
+      expect(bookViewModel.errorMessage, contains('Falha ao carregar livros'));
+      expect(bookViewModel.isLoading, isFalse);
+    });
+
+    test('getTestaments should set errorMessage when an exception occurs', () async {
+      // Arrange
+      final exception = Exception('Network error');
+      when(mockGetTestamentsUseCase.call()).thenThrow(exception);
+
+      // Act
+      await bookViewModel.getTestaments();
+
+      // Assert
+      expect(bookViewModel.testaments, isEmpty);
+      expect(bookViewModel.errorMessage, contains('Falha ao carregar testamentos'));
+      expect(bookViewModel.isLoading, isFalse);
+    });
   });
 }

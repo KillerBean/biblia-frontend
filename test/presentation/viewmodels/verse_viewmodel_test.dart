@@ -52,5 +52,19 @@ void main() {
         expect(verseViewModel.isLoading, isFalse);
       });
     });
+
+    test('getVerses should set errorMessage when an exception occurs', () async {
+      // Arrange
+      final exception = Exception('Database error');
+      when(mockGetVersesUseCase.call(bookId: 1, chapterId: 1)).thenThrow(exception);
+
+      // Act
+      await verseViewModel.getVerses(bookId: 1, chapterId: 1);
+
+      // Assert
+      expect(verseViewModel.verses, isEmpty);
+      expect(verseViewModel.errorMessage, contains('Falha ao carregar versículos'));
+      expect(verseViewModel.isLoading, isFalse);
+    });
   });
 }

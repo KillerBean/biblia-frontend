@@ -19,7 +19,7 @@
 ## 2. Funcionalidade de Busca Avançada
 
 - [ ] **Busca por Conteúdo**
-  - [ ] Implementar busca por palavra-chave ou frase.
+  - [x] Implementar busca por palavra-chave ou frase.
   - [ ] Implementar busca por referência (ex: "João 3:16") com autocompletar.
 
 - [ ] **Filtros de Busca**

@@ -20,7 +20,17 @@
 
 - [x] **Busca por Conteúdo**
   - [x] Implementar busca por palavra-chave ou frase.
-  - [x] Implementar busca por referência (ex: "João 3:16") com autocompletar.
+  - [x] Implementar busca por referência (ex: "João 3:16")
+  - [ ] Implementar busca por tópico/tema (ex: "amor", "fé").
+  - [ ] Implementar busca por versão da Bíblia (ex: "Almeida", "NVI").
+  - [ ] Implementar busca por idioma (ex: "Português", "Inglês").
+  - [ ] Implementar busca por autor (ex: "Paulo", "Moisés").
+  - [ ] Implementar busca por data histórica (ex: "Antigo Testamento", "Novo Testamento").
+  - [ ] Implementar busca por popularidade (ex: "versículos mais lidos").
+  - [ ] Implementar busca por contexto (ex: "versículos relacionados a um versículo específico").
+  - [ ] Implementar busca por comentários e notas de estudo.
+  - [ ] Implementar busca por versões paralelas (comparar versículos em diferentes traduções).
+  - [ ] Implementar autocompletar da busca.
 
 - [ ] **Filtros de Busca**
   - [ ] Adicionar filtro por livro(s).

@@ -94,4 +94,19 @@ class FallbackDatabaseRepository extends DatabaseRepository {
     }
     return verses;
   }
+
+  @override
+  Future<List<Verse>> searchVerses(String query) async {
+    List<Verse> verses = [];
+    final db = await _dbProvider();
+    final rawVerses = await db.rawQuery(
+      "SELECT v.*, b.name as book_name FROM verse v JOIN book b ON v.book_id = b.id WHERE v.text LIKE ? LIMIT 100",
+      ['%$query%'],
+    );
+
+    for (final item in rawVerses) {
+      verses.add(Verse.fromMap(item));
+    }
+    return verses;
+  }
 }

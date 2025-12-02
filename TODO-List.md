@@ -18,9 +18,9 @@
 
 ## 2. Funcionalidade de Busca Avançada
 
-- [ ] **Busca por Conteúdo**
+- [x] **Busca por Conteúdo**
   - [x] Implementar busca por palavra-chave ou frase.
-  - [ ] Implementar busca por referência (ex: "João 3:16") com autocompletar.
+  - [x] Implementar busca por referência (ex: "João 3:16") com autocompletar.
 
 - [ ] **Filtros de Busca**
   - [ ] Adicionar filtro por livro(s).

@@ -39,6 +39,7 @@ class BookModule extends Module {
     r.child('/book/:bookid/:chapterid',
         child: (context) => ChapterPageWidget(
             bookId: int.parse(r.args.params["bookid"]),
-            chapterId: int.parse(r.args.params["chapterid"])));
+            chapterId: int.parse(r.args.params["chapterid"]),
+            highlightVerseId: int.tryParse(r.args.queryParams['verseId'] ?? '')));
   }
 }

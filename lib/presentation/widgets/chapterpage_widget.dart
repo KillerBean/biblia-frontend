@@ -5,9 +5,13 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 class ChapterPageWidget extends StatelessWidget {
   const ChapterPageWidget(
-      {super.key, required this.chapterId, required this.bookId});
+      {super.key,
+      required this.chapterId,
+      required this.bookId,
+      this.highlightVerseId});
   final int chapterId;
   final int bookId;
+  final int? highlightVerseId;
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +22,9 @@ class ChapterPageWidget extends StatelessWidget {
               onPressed: () => Modular.to.pop(),
               icon: const Icon(CupertinoIcons.return_icon)),
         ),
-        body: ListVersesPage(chapterId: chapterId, bookId: bookId));
+        body: ListVersesPage(
+            chapterId: chapterId,
+            bookId: bookId,
+            highlightVerseId: highlightVerseId));
   }
 }

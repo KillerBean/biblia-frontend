@@ -5,9 +5,13 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 class ListVersesPage extends StatefulWidget {
   const ListVersesPage(
-      {super.key, required this.chapterId, required this.bookId});
+      {super.key,
+      required this.chapterId,
+      required this.bookId,
+      this.highlightVerseId});
   final int chapterId;
   final int bookId;
+  final int? highlightVerseId;
 
   @override
   State<ListVersesPage> createState() => _ListVersesPageState();
@@ -31,7 +35,10 @@ class _ListVersesPageState extends State<ListVersesPage> {
           return const Center(child: CircularProgressIndicator());
         }
         return SizedBox.expand(
-          child: TextListItemsWidget(items: viewModel.verses),
+          child: TextListItemsWidget(
+            items: viewModel.verses,
+            highlightVerseId: widget.highlightVerseId,
+          ),
         );
       },
     );

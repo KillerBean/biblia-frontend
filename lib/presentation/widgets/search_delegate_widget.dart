@@ -62,7 +62,7 @@ class BibleSearchDelegate extends SearchDelegate {
                   '${verse.bookName ?? verse.bookId} ${verse.chapter}:${verse.verse}'),
               onTap: () {
                 Modular.to.pushNamed(
-                  '/book/${verse.bookId}/${verse.chapter}',
+                  '/book/${verse.bookId}/${verse.chapter}?verseId=${verse.verse}',
                 );
               },
             );

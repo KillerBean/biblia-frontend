@@ -5,6 +5,12 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
 
+import 'package:biblia/core/utils/config_service.dart' as _i10;
+import 'package:biblia/data/datasources/remote/biblia_remote_data_source.dart'
+    as _i6;
+import 'package:biblia/domain/entities/book.dart' as _i7;
+import 'package:biblia/domain/entities/testament.dart' as _i8;
+import 'package:biblia/domain/entities/verse.dart' as _i9;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i4;
 import 'package:sqflite_common/sql.dart' as _i5;
@@ -519,4 +525,137 @@ class MockDatabase extends _i1.Mock implements _i2.Database {
           ),
         ),
       ) as _i2.Batch);
+}
+
+/// A class which mocks [BibliaRemoteDataSource].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockBibliaRemoteDataSource extends _i1.Mock
+    implements _i6.BibliaRemoteDataSource {
+  MockBibliaRemoteDataSource() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  String get baseUrl => (super.noSuchMethod(
+        Invocation.getter(#baseUrl),
+        returnValue: _i4.dummyValue<String>(
+          this,
+          Invocation.getter(#baseUrl),
+        ),
+      ) as String);
+
+  @override
+  _i3.Future<List<_i7.Book>> getBooks({int? testamentId}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getBooks,
+          [],
+          {#testamentId: testamentId},
+        ),
+        returnValue: _i3.Future<List<_i7.Book>>.value(<_i7.Book>[]),
+      ) as _i3.Future<List<_i7.Book>>);
+
+  @override
+  _i3.Future<List<_i8.Testament>> getTestaments() => (super.noSuchMethod(
+        Invocation.method(
+          #getTestaments,
+          [],
+        ),
+        returnValue: _i3.Future<List<_i8.Testament>>.value(<_i8.Testament>[]),
+      ) as _i3.Future<List<_i8.Testament>>);
+
+  @override
+  _i3.Future<int> getChapters(int? bookId) => (super.noSuchMethod(
+        Invocation.method(
+          #getChapters,
+          [bookId],
+        ),
+        returnValue: _i3.Future<int>.value(0),
+      ) as _i3.Future<int>);
+
+  @override
+  _i3.Future<List<_i9.Verse>> getVerses({
+    int? bookId,
+    int? chapterId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getVerses,
+          [],
+          {
+            #bookId: bookId,
+            #chapterId: chapterId,
+          },
+        ),
+        returnValue: _i3.Future<List<_i9.Verse>>.value(<_i9.Verse>[]),
+      ) as _i3.Future<List<_i9.Verse>>);
+
+  @override
+  _i3.Future<List<_i9.Verse>> getVersesByRange({
+    required int? bookId,
+    required int? chapter,
+    int? startVerse,
+    int? endVerse,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getVersesByRange,
+          [],
+          {
+            #bookId: bookId,
+            #chapter: chapter,
+            #startVerse: startVerse,
+            #endVerse: endVerse,
+          },
+        ),
+        returnValue: _i3.Future<List<_i9.Verse>>.value(<_i9.Verse>[]),
+      ) as _i3.Future<List<_i9.Verse>>);
+
+  @override
+  _i3.Future<_i7.Book?> findBook(String? name) => (super.noSuchMethod(
+        Invocation.method(
+          #findBook,
+          [name],
+        ),
+        returnValue: _i3.Future<_i7.Book?>.value(),
+      ) as _i3.Future<_i7.Book?>);
+
+  @override
+  _i3.Future<List<_i9.Verse>> searchVerses(String? query) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #searchVerses,
+          [query],
+        ),
+        returnValue: _i3.Future<List<_i9.Verse>>.value(<_i9.Verse>[]),
+      ) as _i3.Future<List<_i9.Verse>>);
+}
+
+/// A class which mocks [ConfigService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockConfigService extends _i1.Mock implements _i10.ConfigService {
+  MockConfigService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i3.Future<bool> isApiEnabled() => (super.noSuchMethod(
+        Invocation.method(
+          #isApiEnabled,
+          [],
+        ),
+        returnValue: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
+
+  @override
+  _i3.Future<void> setApiEnabled(bool? value) => (super.noSuchMethod(
+        Invocation.method(
+          #setApiEnabled,
+          [value],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }

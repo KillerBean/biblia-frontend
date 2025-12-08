@@ -1,3 +1,5 @@
+import 'package:biblia/core/utils/config_service.dart';
+import 'package:biblia/data/datasources/remote/biblia_remote_data_source.dart';
 import 'package:biblia/data/repositories/fallback_database_repository.dart';
 import 'package:biblia/domain/entities/book.dart';
 import 'package:biblia/domain/entities/testament.dart';
@@ -8,15 +10,26 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'fallback_database_repository_unit_test.mocks.dart';
 
-@GenerateMocks([Database])
+@GenerateMocks([Database, BibliaRemoteDataSource, ConfigService])
 void main() {
   late FallbackDatabaseRepository repository;
   late MockDatabase mockDatabase;
+  late MockBibliaRemoteDataSource mockRemoteDataSource;
+  late MockConfigService mockConfigService;
 
   setUp(() {
     mockDatabase = MockDatabase();
-    repository =
-        FallbackDatabaseRepository(dbProvider: () async => mockDatabase);
+    mockRemoteDataSource = MockBibliaRemoteDataSource();
+    mockConfigService = MockConfigService();
+    
+    // Default to offline mode for existing tests
+    when(mockConfigService.isApiEnabled()).thenAnswer((_) async => false);
+
+    repository = FallbackDatabaseRepository(
+      mockRemoteDataSource,
+      mockConfigService,
+      dbProvider: () async => mockDatabase,
+    );
   });
 
   group('FallbackDatabaseRepository Unit Tests', () {
@@ -172,5 +185,47 @@ void main() {
             [bookId, chapterId])).called(1);
       });
     });
+    group('API Integration', () {
+      test('should use remote data source when API is enabled', () async {
+        // Arrange
+        when(mockConfigService.isApiEnabled()).thenAnswer((_) async => true);
+        final expectedBooks = [
+          Book(id: 1, bookReferenceId: 1, testamentReferenceId: 1, name: 'Genesis API')
+        ];
+        when(mockRemoteDataSource.getBooks(testamentId: anyNamed('testamentId')))
+            .thenAnswer((_) async => expectedBooks);
+
+        // Act
+        final result = await repository.getBooks();
+
+        // Assert
+        expect(result, expectedBooks);
+        verify(mockRemoteDataSource.getBooks(testamentId: anyNamed('testamentId'))).called(1);
+        verifyNever(mockDatabase.query(any, columns: anyNamed('columns')));
+      });
+
+      test('should fallback to local db when API fails', () async {
+        // Arrange
+        when(mockConfigService.isApiEnabled()).thenAnswer((_) async => true);
+        when(mockRemoteDataSource.getBooks(testamentId: anyNamed('testamentId')))
+            .thenThrow(Exception('API Error'));
+        
+        // Mock local DB response
+        final localData = [
+          {'id': 1, 'book_reference_id': 1, 'testament_reference_id': 1, 'name': 'Genesis Local'}
+        ];
+        when(mockDatabase.query('book', columns: anyNamed('columns')))
+            .thenAnswer((_) async => localData);
+
+        // Act
+        final result = await repository.getBooks();
+
+        // Assert
+        expect(result.first.name, 'Genesis Local');
+        verify(mockRemoteDataSource.getBooks(testamentId: anyNamed('testamentId'))).called(1);
+        verify(mockDatabase.query('book', columns: anyNamed('columns'))).called(1);
+      });
+    });
+
   });
 }

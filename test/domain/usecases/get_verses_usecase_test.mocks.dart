@@ -73,6 +73,46 @@ class MockDatabaseRepository extends _i1.Mock
       ) as _i3.Future<List<_i5.Verse>>);
 
   @override
+  _i3.Future<List<_i5.Verse>> getVersesByRange({
+    required int? bookId,
+    required int? chapter,
+    int? startVerse,
+    int? endVerse,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getVersesByRange,
+          [],
+          {
+            #bookId: bookId,
+            #chapter: chapter,
+            #startVerse: startVerse,
+            #endVerse: endVerse,
+          },
+        ),
+        returnValue: _i3.Future<List<_i5.Verse>>.value(<_i5.Verse>[]),
+      ) as _i3.Future<List<_i5.Verse>>);
+
+  @override
+  _i3.Future<_i4.Book?> findBook(String? name) => (super.noSuchMethod(
+        Invocation.method(
+          #findBook,
+          [name],
+        ),
+        returnValue: _i3.Future<_i4.Book?>.value(),
+      ) as _i3.Future<_i4.Book?>);
+
+  @override
+  _i3.Future<List<_i5.Verse>> searchVerses(String? query) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #searchVerses,
+          [query],
+        ),
+        returnValue: _i3.Future<List<_i5.Verse>>.value(<_i5.Verse>[]),
+      ) as _i3.Future<List<_i5.Verse>>);
+
+  @override
   _i3.Future<List<_i6.Testament>> getTestaments() => (super.noSuchMethod(
         Invocation.method(
           #getTestaments,

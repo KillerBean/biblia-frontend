@@ -40,6 +40,8 @@ dependencies:
   wakelock_plus: ^1.4.0
   sqflite_common_ffi: ^2.3.6
   flutter_modular: ^6.4.1
+  dio: ^5.9.0
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:

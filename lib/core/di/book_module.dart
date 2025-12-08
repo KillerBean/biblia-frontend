@@ -1,3 +1,6 @@
+import 'package:biblia/core/utils/config_service.dart';
+import 'package:biblia/core/utils/shared_pref_config_service.dart';
+import 'package:biblia/data/datasources/remote/biblia_remote_data_source.dart';
 import 'package:biblia/data/repositories/fallback_database_repository.dart';
 import 'package:biblia/domain/repositories/database_repository.dart';
 import 'package:biblia/domain/usecases/get_books_usecase.dart';
@@ -12,17 +15,28 @@ import 'package:biblia/presentation/viewmodels/verse_viewmodel.dart';
 import 'package:biblia/presentation/widgets/bookpage_widget.dart';
 import 'package:biblia/presentation/widgets/chapterpage_widget.dart';
 import 'package:biblia/presentation/widgets/homepage_widget.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class BookModule extends Module {
   @override
   void binds(i) {
+    // Config and Network
+    i.addLazySingleton<ConfigService>(SharedPrefConfigService.new);
+    i.addLazySingleton(() => Dio());
+    i.addLazySingleton(BibliaRemoteDataSource.new);
+
+    // Repository
     i.addLazySingleton<DatabaseRepository>(FallbackDatabaseRepository.new);
+
+    // UseCases
     i.addLazySingleton(GetBooksUseCase.new);
     i.addLazySingleton(GetTestamentsUseCase.new);
     i.addLazySingleton(GetChaptersUseCase.new);
     i.addLazySingleton(GetVersesUseCase.new);
     i.addLazySingleton(SearchVersesUseCase.new);
+
+    // ViewModels
     i.add(() => BookViewModel(i.get(), i.get()));
     i.add(() => ChapterViewModel(i.get()));
     i.add(() => VerseViewModel(i.get()));

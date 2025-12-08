@@ -1,3 +1,5 @@
+import 'package:biblia/core/utils/config_service.dart';
+import 'package:biblia/data/datasources/remote/biblia_remote_data_source.dart';
 import 'package:biblia/domain/entities/book.dart';
 import 'package:biblia/domain/entities/testament.dart';
 import 'package:biblia/domain/entities/verse.dart';
@@ -7,12 +9,29 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class FallbackDatabaseRepository extends DatabaseRepository {
   final Future<Database> Function() _dbProvider;
+  final BibliaRemoteDataSource _remoteDataSource;
+  final ConfigService _configService;
 
-  FallbackDatabaseRepository({Future<Database> Function()? dbProvider})
-      : _dbProvider = dbProvider ?? (() => DatabaseRetriever.instance.db);
+  FallbackDatabaseRepository(
+    this._remoteDataSource,
+    this._configService, {
+    Future<Database> Function()? dbProvider,
+  }) : _dbProvider = dbProvider ?? (() => DatabaseRetriever.instance.db);
+
+  Future<bool> _shouldUseApi() async {
+    return await _configService.isApiEnabled();
+  }
 
   @override
   Future<List<Book>> getBooks({int? testament}) async {
+    if (await _shouldUseApi()) {
+      try {
+        return await _remoteDataSource.getBooks(testamentId: testament);
+      } catch (e) {
+        print('Fallback to local: API failed: $e');
+      }
+    }
+
     List<Book> books = [];
     final db = await _dbProvider();
     final rawBooks = await db.query("book",
@@ -25,6 +44,14 @@ class FallbackDatabaseRepository extends DatabaseRepository {
 
   @override
   Future<List<Testament>> getTestaments() async {
+    if (await _shouldUseApi()) {
+      try {
+        return await _remoteDataSource.getTestaments();
+      } catch (e) {
+        print('Fallback to local: API failed: $e');
+      }
+    }
+
     List<Testament> testaments = [];
     final db = await _dbProvider();
     final rawTestaments = await db.query("testament", columns: ["id", "name"]);
@@ -36,6 +63,14 @@ class FallbackDatabaseRepository extends DatabaseRepository {
 
   @override
   Future<int> getChapters({required int bookId}) async {
+    if (await _shouldUseApi()) {
+      try {
+        return await _remoteDataSource.getChapters(bookId);
+      } catch (e) {
+        print('Fallback to local: API failed: $e');
+      }
+    }
+
     final db = await _dbProvider();
     final rawVerses = await db.rawQuery(
         "SELECT * FROM verse WHERE book_id = ? GROUP BY chapter", [bookId]);
@@ -45,6 +80,18 @@ class FallbackDatabaseRepository extends DatabaseRepository {
 
   @override
   Future<Book?> findBook(String name) async {
+    if (await _shouldUseApi()) {
+      try {
+        final book = await _remoteDataSource.findBook(name);
+        if (book != null) return book;
+        // If API returns null, we might want to try local too?
+        // Or assume API is authoritative?
+        // Let's fallback to local if null or error.
+      } catch (e) {
+        print('Fallback to local: API failed: $e');
+      }
+    }
+
     final db = await _dbProvider();
     // Tenta encontrar correspondência exata ou parcial no início
     final res = await db.query(
@@ -57,11 +104,6 @@ class FallbackDatabaseRepository extends DatabaseRepository {
     if (res.isNotEmpty) {
       return Book.fromMap(res.first);
     }
-
-    // Tenta encontrar correspondência em qualquer parte (útil para "João" achar "1 João" se desejado,
-    // mas arriscado. Vamos manter prefixo primeiro.
-    // Se não achou prefixo, tenta contains, mas prioriza livros menores?
-    // Por enquanto simples prefix match.
     return null;
   }
 
@@ -72,41 +114,26 @@ class FallbackDatabaseRepository extends DatabaseRepository {
     int? startVerse,
     int? endVerse,
   }) async {
+    if (await _shouldUseApi()) {
+      try {
+        return await _remoteDataSource.getVersesByRange(
+          bookId: bookId,
+          chapter: chapter,
+          startVerse: startVerse,
+          endVerse: endVerse,
+        );
+      } catch (e) {
+        print('Fallback to local: API failed: $e');
+      }
+    }
+
     List<Verse> verses = [];
     final db = await _dbProvider();
+    
+    // Re-implementando lógica de range correta
     String sql =
         "SELECT v.*, b.name as book_name FROM verse v JOIN book b ON v.book_id = b.id WHERE v.book_id = ? AND v.chapter = ?";
     List<dynamic> args = [bookId, chapter];
-
-    if (startVerse != null) {
-      sql += " AND v.verse >= ?";
-      args.add(startVerse);
-    }
-
-    if (endVerse != null) {
-      sql += " AND v.verse <= ?";
-      args.add(endVerse);
-    } else if (startVerse != null) {
-      // Se tem startVerse mas não endVerse, assumimos que é só aquele versículo?
-      // O prompt diz: "Jo 1:5" -> só o 5.
-      // Mas "Jo 1:5-10" -> 5 ao 10.
-      // Se startVerse é passado e endVerse null, vamos assumir que queremos APENAS o startVerse.
-      // Para pegar "do X em diante", teríamos que ter uma flag explícita, mas o padrão "Cap:Verso" é único.
-      // Porém, se eu quiser "ler do 5 em diante", o usuário digitaria "5-". O parser deve lidar com isso.
-      // Aqui, vou assumir: se start != null e end == null, é single verse match.
-      sql += " AND v.verse = ?"; // Redundante se já tem >=, mas para garantir igualdade
-      // Ops, lógica acima:
-      // Range "5-10": start=5, end=10 -> >= 5 AND <= 10.
-      // Single "5": start=5, end=null -> quero SÓ o 5.
-      // Então:
-      // if (endVerse == null) sql += " AND v.verse = startVerse" effectively.
-      // Corrigindo lógica:
-    }
-
-    // Re-implementando lógica de range correta
-    sql =
-        "SELECT v.*, b.name as book_name FROM verse v JOIN book b ON v.book_id = b.id WHERE v.book_id = ? AND v.chapter = ?";
-    args = [bookId, chapter];
 
     if (startVerse != null && endVerse != null) {
       sql += " AND v.verse >= ? AND v.verse <= ?";
@@ -127,6 +154,14 @@ class FallbackDatabaseRepository extends DatabaseRepository {
 
   @override
   Future<List<Verse>> getVerses({int? chapterId, int? bookId}) async {
+    if (await _shouldUseApi()) {
+      try {
+        return await _remoteDataSource.getVerses(bookId: bookId, chapterId: chapterId);
+      } catch (e) {
+        print('Fallback to local: API failed: $e');
+      }
+    }
+
     List<Verse> verses = [];
     List<dynamic> rawVerses = [];
     final db = await _dbProvider();
@@ -150,27 +185,6 @@ class FallbackDatabaseRepository extends DatabaseRepository {
       }
     }
 
-    /*
-     * modo antigo de maior complexidade ciclomática
-    // if (chapterId != null && bookId == null) return [];
-
-    // if (chapterId != null && bookId != null) {
-    //   rawVerses = await (await DatabaseRetriever.instance.db).rawQuery(
-    //       "SELECT * FROM verse WHERE book_id = ? AND chapter = ?",
-    //       [bookId, chapterId]);
-    // }
-
-    // if (bookId != null && chapterId == null) {
-    //   rawVerses = await (await DatabaseRetriever.instance.db)
-    //       .rawQuery("SELECT * FROM verse WHERE book_id = ?", [bookId]);
-    // }
-
-    // if (chapterId == null && bookId == null) {
-    //   rawVerses = await (await DatabaseRetriever.instance.db)
-    //     .query("verse", columns: ["id", "book_id", "chapter", "verse", "text"]);
-    // }
-    */
-
     for (final item in rawVerses) {
       verses.add(Verse.fromMap(item));
     }
@@ -179,6 +193,14 @@ class FallbackDatabaseRepository extends DatabaseRepository {
 
   @override
   Future<List<Verse>> searchVerses(String query) async {
+    if (await _shouldUseApi()) {
+      try {
+        return await _remoteDataSource.searchVerses(query);
+      } catch (e) {
+        print('Fallback to local: API failed: $e');
+      }
+    }
+
     List<Verse> verses = [];
     final db = await _dbProvider();
     final rawVerses = await db.rawQuery(

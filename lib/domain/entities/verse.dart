@@ -21,7 +21,7 @@ class Verse {
         chapter = res["chapter"],
         verse = res["verse"],
         text = res["text"],
-        bookName = res["book_name"];
+        bookName = res["book_name"] ?? res['book']?['name'];
 
   Map<String, Object?> toMap() {
     return {

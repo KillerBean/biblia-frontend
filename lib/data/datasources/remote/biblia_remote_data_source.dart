@@ -6,9 +6,21 @@ import 'package:dio/dio.dart';
 class BibliaRemoteDataSource {
   final Dio _dio;
   final String baseUrl;
+  Map<int, String>? _bookNamesCache;
 
   BibliaRemoteDataSource({Dio? dio, this.baseUrl = 'http://localhost'})
       : _dio = dio ?? Dio();
+
+  Future<void> _ensureBookNamesLoaded() async {
+    if (_bookNamesCache != null) return;
+
+    try {
+      final books = await getBooks();
+      _bookNamesCache = {for (var b in books) b.id: b.name};
+    } catch (e) {
+      print('Warning: Failed to load book names for cache: $e');
+    }
+  }
 
   Future<List<Book>> getBooks({int? testamentId}) async {
     try {
@@ -97,42 +109,101 @@ class BibliaRemoteDataSource {
     throw Exception('Failed to load verses from API');
   }
 
-  Future<List<Verse>> getVersesByRange({
-    required int bookId,
-    required int chapter,
-    int? startVerse,
-    int? endVerse,
-  }) async {
-    try {
-      // Assuming a robust search or filter endpoint exists
-      // If not, we might need to fetch all and filter (inefficient)
-      // Or use query params like ?start=X&end=Y
-      final query = {
-        'book_id': bookId,
-        'chapter': chapter,
-      };
-      if (startVerse != null) query['start_verse'] = startVerse;
-      if (endVerse != null) query['end_verse'] = endVerse;
+    Future<List<Verse>> getVersesByRange({
 
-      final response =
-          await _dio.get('$baseUrl/verses/range', queryParameters: query);
+      required int bookId,
 
-      if (response.statusCode == 200) {
-        return (response.data as List).map((e) => Verse.fromMap(e)).toList();
+      required int chapter,
+
+      int? startVerse,
+
+      int? endVerse,
+
+    }) async {
+
+      try {
+
+        // API does not support range queries. Fetch the full chapter and filter locally.
+
+        final response = await _dio.get('$baseUrl/verses/$bookId/$chapter');
+
+        
+
+        if (response.statusCode == 200) {
+
+           var verses = (response.data as List)
+
+              .map((e) => Verse.fromMap(e))
+
+              .toList();
+
+  
+
+           if (startVerse != null) {
+
+             verses = verses.where((v) => v.verse >= startVerse).toList();
+
+           }
+
+           
+
+           if (endVerse != null) {
+
+             verses = verses.where((v) => v.verse <= endVerse).toList();
+
+           } else if (startVerse != null) {
+
+             // Behavior consistency: if only startVerse is given, return only that verse? 
+
+             // Or from that verse to the end?
+
+             // The repository implementation suggests:
+
+             // if (startVerse != null && endVerse == null) -> sql += " AND v.verse = ?"
+
+             // So strictly single verse if endVerse is null.
+
+             verses = verses.where((v) => v.verse == startVerse).toList();
+
+           }
+
+           
+
+           return verses;
+
+        }
+
+      } catch (e) {
+
+         print('API Error getVersesByRange: $e');
+
       }
-    } catch (e) {
-      print('API Error getVersesByRange: $e');
+
+      throw Exception('Failed to load verses range from API');
+
     }
-    throw Exception('Failed to load verses range from API');
-  }
+
+  
 
   Future<Book?> findBook(String name) async {
     try {
-      final response = await _dio
-          .get('$baseUrl/books/search', queryParameters: {'name': name});
-
-      if (response.statusCode == 200 && (response.data as List).isNotEmpty) {
-        return Book.fromMap((response.data as List).first);
+      // No dedicated search endpoint for books found in swagger.
+      // Fetching all books and filtering locally.
+      final response = await _dio.get('$baseUrl/books');
+      
+      if (response.statusCode == 200) {
+        final books = (response.data as List)
+            .map((e) => Book.fromMap(e))
+            .toList();
+            
+        try {
+          // Simple case-insensitive prefix match
+          return books.firstWhere(
+            (b) => b.name.toLowerCase().startsWith(name.toLowerCase()),
+          );
+        } catch (e) {
+          return null;
+        }
       }
     } catch (e) {
       print('API Error findBook: $e');
@@ -143,13 +214,25 @@ class BibliaRemoteDataSource {
   Future<List<Verse>> searchVerses(String query) async {
     try {
       final response =
-          await _dio.get('$baseUrl/search', queryParameters: {'q': query});
+          await _dio.get('$baseUrl/search', queryParameters: {'query': query});
 
       if (response.statusCode == 200) {
-        return (response.data as List).map((e) => Verse.fromMap(e)).toList();
+        await _ensureBookNamesLoaded();
+        
+        return (response.data as List).map((e) {
+          final verse = Verse.fromMap(e);
+          if (_bookNamesCache != null && _bookNamesCache!.containsKey(verse.bookId)) {
+            verse.bookName = _bookNamesCache![verse.bookId];
+          }
+          return verse;
+        }).toList();
       }
     } catch (e) {
-      print('API Error searchVerses: $e');
+      if (e is DioException) {
+         print('API Error searchVerses: ${e.message} - ${e.response?.data}');
+      } else {
+         print('API Error searchVerses: $e');
+      }
     }
     return [];
   }

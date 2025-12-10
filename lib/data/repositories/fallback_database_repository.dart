@@ -1,4 +1,5 @@
 import 'package:biblia/core/utils/config_service.dart';
+import 'package:biblia/core/utils/reference_parser.dart';
 import 'package:biblia/data/datasources/remote/biblia_remote_data_source.dart';
 import 'package:biblia/domain/entities/book.dart';
 import 'package:biblia/domain/entities/testament.dart';
@@ -84,16 +85,12 @@ class FallbackDatabaseRepository extends DatabaseRepository {
       try {
         final book = await _remoteDataSource.findBook(name);
         if (book != null) return book;
-        // If API returns null, we might want to try local too?
-        // Or assume API is authoritative?
-        // Let's fallback to local if null or error.
       } catch (e) {
         print('Fallback to local: API failed: $e');
       }
     }
 
     final db = await _dbProvider();
-    // Tenta encontrar correspondência exata ou parcial no início
     final res = await db.query(
       "book",
       where: "name LIKE ?",
@@ -130,7 +127,6 @@ class FallbackDatabaseRepository extends DatabaseRepository {
     List<Verse> verses = [];
     final db = await _dbProvider();
 
-    // Re-implementando lógica de range correta
     String sql =
         "SELECT v.*, b.name as book_name FROM verse v JOIN book b ON v.book_id = b.id WHERE v.book_id = ? AND v.chapter = ?";
     List<dynamic> args = [bookId, chapter];
@@ -169,18 +165,15 @@ class FallbackDatabaseRepository extends DatabaseRepository {
 
     if (bookId == null) {
       if (chapterId == null) {
-        //busca todos os versículos
         rawVerses = await db.query("verse",
             columns: ["id", "book_id", "chapter", "verse", "text"]);
       }
     } else {
       if (chapterId == null) {
-        //busca todos os versículos de um livro específico
         rawVerses = await db
             .rawQuery("SELECT * FROM verse WHERE book_id = ?", [bookId]);
       }
       if (chapterId != null) {
-        //busca todos os versículos de um livro e capítulo específicos
         rawVerses = await db.rawQuery(
             "SELECT * FROM verse WHERE book_id = ? AND chapter = ?",
             [bookId, chapterId]);
@@ -204,43 +197,13 @@ class FallbackDatabaseRepository extends DatabaseRepository {
     }
 
     // Local Logic: Try parsing references first
-
-    final references = _parseReferences(query);
+    final references = ReferenceParser.parse(query);
 
     if (references.isNotEmpty) {
       final List<Verse> results = [];
-
       bool foundAnyReference = false;
 
       for (final ref in references) {
-        // Reuse findBook and getVersesByRange (which handle local fallback logic internally if needed,
-
-        // but here we are already in the "Fallback or Local" context, so we can rely on public methods
-
-        // which will route back to local implementation because we are in FallbackDatabaseRepository)
-
-        // Actually, to avoid recursion or double checks, we should call local implementations directly?
-
-        // But findBook/getVersesByRange also check _shouldUseApi().
-
-        // Since we are in the "Local" block of searchVerses (because API failed or is disabled),
-
-        // we should ideally call the LOCAL logic directly.
-
-        // However, refactoring everything to separate private _localFindBook is complex.
-
-        // Calling this.findBook() is safe because it checks _shouldUseApi() again.
-
-        // If _shouldUseApi() is false, it uses local.
-
-        // If it was true but failed (catch block above), calling this.findBook() might try API again?
-
-        // YES. That is a minor inefficiency but correct behavior (retry).
-
-        // BUT, if we are in the catch block, we might want to FORCE local.
-
-        // Let's assume for now calling public methods is fine.
-
         final book = await findBook(ref.bookName);
 
         if (book != null) {
@@ -263,9 +226,7 @@ class FallbackDatabaseRepository extends DatabaseRepository {
     }
 
     // Fallback to text search
-
     List<Verse> verses = [];
-
     final db = await _dbProvider();
 
     final rawVerses = await db.rawQuery(
@@ -279,48 +240,5 @@ class FallbackDatabaseRepository extends DatabaseRepository {
 
     return verses;
   }
-
-  List<_ParsedReference> _parseReferences(String query) {
-    final List<_ParsedReference> refs = [];
-
-    final parts = query.split(';');
-
-    final regex = RegExp(
-      r'^((?:\d\s*)?[a-zA-ZÀ-ÿ]+(?:\s+[a-zA-ZÀ-ÿ]+)*)\s+(\d+)(?::(\d+)(?:-(\d+))?)?$',
-    );
-
-    for (var part in parts) {
-      part = part.trim();
-
-      final match = regex.firstMatch(part);
-
-      if (match != null) {
-        final bookName = match.group(1)!.trim();
-
-        final chapter = int.parse(match.group(2)!);
-
-        final startVerse =
-            match.group(3) != null ? int.parse(match.group(3)!) : null;
-
-        final endVerse =
-            match.group(4) != null ? int.parse(match.group(4)!) : null;
-
-        refs.add(_ParsedReference(bookName, chapter, startVerse, endVerse));
-      }
-    }
-
-    return refs;
-  }
 }
 
-class _ParsedReference {
-  final String bookName;
-
-  final int chapter;
-
-  final int? startVerse;
-
-  final int? endVerse;
-
-  _ParsedReference(this.bookName, this.chapter, this.startVerse, this.endVerse);
-}

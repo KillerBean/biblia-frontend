@@ -8,10 +8,10 @@ class ChapterPageWidget extends StatelessWidget {
       {super.key,
       required this.chapterId,
       required this.bookId,
-      this.highlightVerseId});
+      this.highlightedVerses});
   final int chapterId;
   final int bookId;
-  final int? highlightVerseId;
+  final List<int>? highlightedVerses;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +25,6 @@ class ChapterPageWidget extends StatelessWidget {
         body: ListVersesPage(
             chapterId: chapterId,
             bookId: bookId,
-            highlightVerseId: highlightVerseId));
+            highlightedVerses: highlightedVerses));
   }
 }

@@ -8,10 +8,10 @@ class ListVersesPage extends StatefulWidget {
       {super.key,
       required this.chapterId,
       required this.bookId,
-      this.highlightVerseId});
+      this.highlightedVerses});
   final int chapterId;
   final int bookId;
-  final int? highlightVerseId;
+  final List<int>? highlightedVerses;
 
   @override
   State<ListVersesPage> createState() => _ListVersesPageState();
@@ -37,7 +37,7 @@ class _ListVersesPageState extends State<ListVersesPage> {
         return SizedBox.expand(
           child: TextListItemsWidget(
             items: viewModel.verses,
-            highlightVerseId: widget.highlightVerseId,
+            highlightedVerses: widget.highlightedVerses,
           ),
         );
       },

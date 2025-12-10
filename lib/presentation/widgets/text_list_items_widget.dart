@@ -4,9 +4,9 @@ import 'package:flutter/scheduler.dart';
 
 class TextListItemsWidget extends StatefulWidget {
   const TextListItemsWidget(
-      {super.key, required this.items, this.highlightVerseId});
+      {super.key, required this.items, this.highlightedVerses});
   final List<dynamic> items;
-  final int? highlightVerseId;
+  final List<int>? highlightedVerses;
 
   @override
   State<TextListItemsWidget> createState() => _TextListItemsWidgetState();
@@ -14,19 +14,20 @@ class TextListItemsWidget extends StatefulWidget {
 
 class _TextListItemsWidgetState extends State<TextListItemsWidget> {
   final Map<int, GlobalKey> _itemKeys = {};
-  int? _currentHighlightId;
+  List<int>? _currentHighlightIds;
 
   @override
   void initState() {
     super.initState();
-    _currentHighlightId = widget.highlightVerseId;
-    if (widget.highlightVerseId != null) {
+    _currentHighlightIds = widget.highlightedVerses;
+    if (widget.highlightedVerses != null && widget.highlightedVerses!.isNotEmpty) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        _scrollToItem(widget.highlightVerseId!);
+        // Scroll to the first highlighted item
+        _scrollToItem(widget.highlightedVerses!.first);
         Future.delayed(const Duration(seconds: 2), () {
           if (mounted) {
             setState(() {
-              _currentHighlightId = null;
+              _currentHighlightIds = null;
             });
           }
         });
@@ -37,17 +38,18 @@ class _TextListItemsWidgetState extends State<TextListItemsWidget> {
   @override
   void didUpdateWidget(TextListItemsWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.highlightVerseId != oldWidget.highlightVerseId &&
-        widget.highlightVerseId != null) {
+    if (widget.highlightedVerses != oldWidget.highlightedVerses &&
+        widget.highlightedVerses != null && 
+        widget.highlightedVerses!.isNotEmpty) {
       setState(() {
-        _currentHighlightId = widget.highlightVerseId;
+        _currentHighlightIds = widget.highlightedVerses;
       });
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        _scrollToItem(widget.highlightVerseId!);
+        _scrollToItem(widget.highlightedVerses!.first);
         Future.delayed(const Duration(seconds: 2), () {
           if (mounted) {
             setState(() {
-              _currentHighlightId = null;
+              _currentHighlightIds = null;
             });
           }
         });
@@ -83,7 +85,7 @@ class _TextListItemsWidgetState extends State<TextListItemsWidget> {
                 _itemKeys[verseId] = GlobalKey();
               }
 
-              final isHighlighted = _currentHighlightId == verseId;
+              final isHighlighted = _currentHighlightIds?.contains(verseId) ?? false;
 
               return AnimatedContainer(
                 duration: const Duration(milliseconds: 500),

@@ -50,10 +50,26 @@ class BookModule extends Module {
     r.child('/book/:bookid',
         child: (context) =>
             BookPageWidget(bookId: int.parse(r.args.params["bookid"])));
-    r.child('/book/:bookid/:chapterid',
-        child: (context) => ChapterPageWidget(
-            bookId: int.parse(r.args.params["bookid"]),
-            chapterId: int.parse(r.args.params["chapterid"]),
-            highlightVerseId: int.tryParse(r.args.queryParams['verseId'] ?? '')));
+    r.child('/book/:bookid/:chapterid', child: (context) {
+      final highlightParam = r.args.queryParams['highlight'];
+      final verseIdParam = r.args.queryParams['verseId'];
+
+      List<int>? highlights;
+      if (highlightParam != null && highlightParam.isNotEmpty) {
+        highlights = highlightParam
+            .split(',')
+            .map((e) => int.tryParse(e))
+            .whereType<int>()
+            .toList();
+      } else if (verseIdParam != null && verseIdParam.isNotEmpty) {
+        final v = int.tryParse(verseIdParam);
+        if (v != null) highlights = [v];
+      }
+
+      return ChapterPageWidget(
+          bookId: int.parse(r.args.params["bookid"]),
+          chapterId: int.parse(r.args.params["chapterid"]),
+          highlightedVerses: highlights);
+    });
   }
 }

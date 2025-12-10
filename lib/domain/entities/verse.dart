@@ -17,7 +17,7 @@ class Verse {
 
   Verse.fromMap(Map<String, dynamic> res)
       : id = res["id"],
-        bookId = res["book_id"],
+        bookId = res["book_id"] ?? res['book']?['id'],
         chapter = res["chapter"],
         verse = res["verse"],
         text = res["text"],

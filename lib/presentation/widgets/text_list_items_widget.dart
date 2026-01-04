@@ -75,7 +75,7 @@ class _TextListItemsWidgetState extends State<TextListItemsWidget> {
     return SelectionArea(
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 40),
+          padding: const EdgeInsets.only(bottom: 40, top: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: widget.items.map((item) {
@@ -101,7 +101,7 @@ class _TextListItemsWidgetState extends State<TextListItemsWidget> {
                         )
                     : Colors.transparent,
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                 child: Text(
                   "${verse.verse} - ${verse.text}",
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(

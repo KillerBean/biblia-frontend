@@ -1,6 +1,8 @@
 import 'package:biblia/domain/entities/verse.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 
 class TextListItemsWidget extends StatefulWidget {
   const TextListItemsWidget(
@@ -15,6 +17,7 @@ class TextListItemsWidget extends StatefulWidget {
 class _TextListItemsWidgetState extends State<TextListItemsWidget> {
   final Map<int, GlobalKey> _itemKeys = {};
   List<int>? _currentHighlightIds;
+  SelectedContent? _selectedContent;
 
   @override
   void initState() {
@@ -73,6 +76,54 @@ class _TextListItemsWidgetState extends State<TextListItemsWidget> {
   @override
   Widget build(BuildContext context) {
     return SelectionArea(
+      onSelectionChanged: (content) {
+        _selectedContent = content;
+      },
+      contextMenuBuilder: (context, selectableRegionState) {
+        return AdaptiveTextSelectionToolbar.buttonItems(
+          anchors: selectableRegionState.contextMenuAnchors,
+          buttonItems: [
+            ContextMenuButtonItem(
+              onPressed: () {
+                final text = _selectedContent?.plainText;
+                if (text != null) {
+                  // Regex: Adiciona quebra de linha antes de números de versículo (ex: "2 - "),
+                  // exceto se for o início do texto.
+                  // (?<!^) -> Lookbehind negativo: garante que não é o início da string
+                  // (\d+ - ) -> Captura o padrão "Número - "
+                  final formattedText = text.replaceAllMapped(
+                    RegExp(r'(?<!^)(\d+ - )'),
+                    (match) => '\n${match.group(1)}',
+                  );
+
+                  Clipboard.setData(ClipboardData(text: formattedText));
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Seleção copiada!'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+
+                  selectableRegionState.hideToolbar();
+                } else {
+                  // Fallback para cópia padrão caso não tenhamos capturado o texto
+                  // ignore: deprecated_member_use
+                  selectableRegionState
+                      .copySelection(SelectionChangedCause.toolbar);
+                }
+              },
+              label: 'Copiar',
+            ),
+            ContextMenuButtonItem(
+              onPressed: () {
+                selectableRegionState.selectAll(SelectionChangedCause.toolbar);
+              },
+              label: 'Selecionar tudo',
+            ),
+          ],
+        );
+      },
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(bottom: 40, top: 12),

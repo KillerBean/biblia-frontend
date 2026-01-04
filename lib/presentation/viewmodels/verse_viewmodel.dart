@@ -19,10 +19,9 @@ class VerseViewModel extends ChangeNotifier {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
-    
+
     try {
-      _verses =
-          await _getVersesUseCase(bookId: bookId, chapterId: chapterId);
+      _verses = await _getVersesUseCase(bookId: bookId, chapterId: chapterId);
     } catch (e) {
       _errorMessage = "Falha ao carregar versículos: $e";
     } finally {

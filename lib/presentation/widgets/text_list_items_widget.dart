@@ -108,9 +108,10 @@ class _TextListItemsWidgetState extends State<TextListItemsWidget> {
                   selectableRegionState.hideToolbar();
                 } else {
                   // Fallback para cópia padrão caso não tenhamos capturado o texto
-                  // ignore: deprecated_member_use
-                  selectableRegionState
-                      .copySelection(SelectionChangedCause.toolbar);
+                  Actions.maybeInvoke<CopySelectionTextIntent>(
+                    context,
+                    CopySelectionTextIntent.copy,
+                  );
                 }
               },
               label: 'Copiar',

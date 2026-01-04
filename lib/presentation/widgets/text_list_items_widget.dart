@@ -20,7 +20,8 @@ class _TextListItemsWidgetState extends State<TextListItemsWidget> {
   void initState() {
     super.initState();
     _currentHighlightIds = widget.highlightedVerses;
-    if (widget.highlightedVerses != null && widget.highlightedVerses!.isNotEmpty) {
+    if (widget.highlightedVerses != null &&
+        widget.highlightedVerses!.isNotEmpty) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         // Scroll to the first highlighted item
         _scrollToItem(widget.highlightedVerses!.first);
@@ -39,7 +40,7 @@ class _TextListItemsWidgetState extends State<TextListItemsWidget> {
   void didUpdateWidget(TextListItemsWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.highlightedVerses != oldWidget.highlightedVerses &&
-        widget.highlightedVerses != null && 
+        widget.highlightedVerses != null &&
         widget.highlightedVerses!.isNotEmpty) {
       setState(() {
         _currentHighlightIds = widget.highlightedVerses;
@@ -85,7 +86,8 @@ class _TextListItemsWidgetState extends State<TextListItemsWidget> {
                 _itemKeys[verseId] = GlobalKey();
               }
 
-              final isHighlighted = _currentHighlightIds?.contains(verseId) ?? false;
+              final isHighlighted =
+                  _currentHighlightIds?.contains(verseId) ?? false;
 
               return AnimatedContainer(
                 duration: const Duration(milliseconds: 500),
@@ -94,7 +96,9 @@ class _TextListItemsWidgetState extends State<TextListItemsWidget> {
                     ? Theme.of(context)
                         .colorScheme
                         .tertiaryContainer
-                        .withOpacity(0.5)
+                        .withValues(
+                          alpha: 0.5,
+                        )
                     : Colors.transparent,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

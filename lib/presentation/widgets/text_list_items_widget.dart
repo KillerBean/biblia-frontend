@@ -156,9 +156,15 @@ class _TextListItemsWidgetState extends State<TextListItemsWidget> {
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                 child: Text(
                   "${verse.verse} - ${verse.text}",
+                  strutStyle: const StrutStyle(
+                    fontSize: 18,
+                    height: 1.15, //isHighlighted ? 1.4 : 1.2,
+                    leading: 0,
+                    forceStrutHeight: true,
+                  ),
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontSize: 18,
-                        height: 1.5,
+                        height: isHighlighted ? 1.4 : 1.2,
                       ),
                 ),
               );

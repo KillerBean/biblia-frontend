@@ -74,10 +74,28 @@ SQLite database `assets/db/ARC.db` contains tables: `testament`, `book`, `verse`
 
 ## Testing
 
-Tests use `mockito` for mocking. Mock files (`.mocks.dart`) are generated. Test structure mirrors `lib/`:
-- `test/domain/usecases/` - Use case tests
-- `test/presentation/viewmodels/` - ViewModel tests
-- `test/data/repositories/` - Repository tests
+| Nível | O que testa | Mocks | Ferramentas |
+|-------|-------------|-------|-------------|
+| **Unit — domínio** | Use cases, entidades, parsers puros | ❌ | flutter_test |
+| **Unit — ViewModels** | ChangeNotifier state transitions | ✅ mock de repositórios | mockito |
+| **Unit — repositórios** | FallbackDatabaseRepository, lógica de fallback | ✅ mock de Dio e DB | mockito |
+| **Widget** | Componentes de UI isolados | ✅ mock de ViewModel | flutter_test |
+
+Mocks gerados via `build_runner` — sempre rodar após alterar `@GenerateMocks`:
+```bash
+dart run build_runner build --delete-conflicting-outputs
+```
+
+Regra: testes de domínio e ViewModel nunca tocam SQLite real nem HTTP.
+
+## Performance (Flutter)
+
+- Use `const` em todos os widgets que não têm estado variável
+- Prefira `AnimatedBuilder` sobre `setState` amplo — scope o rebuild ao mínimo
+- `FutureBuilder`/`StreamBuilder`: inclua `initialData` para evitar flash de loading
+- Imagens: use `Image.asset` com `cacheWidth`/`cacheHeight` para decodificação menor
+- Evite reconstruir o `DatabaseRetriever` — é singleton; garanta que o módulo o registre como `Singleton` (não `Bind`)
+- `RepaintBoundary` em animações pesadas que não precisam repintar o resto da árvore
 
 ## Language
 

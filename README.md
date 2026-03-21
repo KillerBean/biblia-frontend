@@ -1,16 +1,38 @@
-# biblia
+# Biblia
 
-A new Flutter project.
+Uma app Flutter para leitura de Bíblia com suporte offline e API remota. Busca, navegação por livros/capítulos/versículos, análise de referências bíblicas e marcadores.
 
-## Getting Started
+## Início rápido
 
-This project is a starting point for a Flutter application.
+```bash
+flutter pub get
+flutter run
+```
 
-A few resources to get you started if this is your first Flutter project:
+## Testes
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```bash
+flutter test                    # Todos os testes
+flutter analyze                 # Análise estática
+dart run build_runner build     # Gerar mocks após alterações
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Arquitetura
+
+Clean Architecture + MVVM. Veja [CLAUDE.md](CLAUDE.md) para detalhes.
+
+```
+lib/
+├── core/           # DI (flutter_modular), utilitários
+├── domain/         # Use cases, entidades, repositórios abstratos
+├── data/           # SQLite local, Dio HTTP, implementações
+└── presentation/   # UI, ViewModels (ChangeNotifier)
+```
+
+## Status
+
+- ✅ Navegação (livros → capítulos → versículos)
+- ✅ Busca (referências bíblicas + full-text)
+- ✅ Toggle API/offline
+- ✅ Seleção e cópia de versículos
+- 🚧 Veja [TODO.md](TODO.md) para features pendentes

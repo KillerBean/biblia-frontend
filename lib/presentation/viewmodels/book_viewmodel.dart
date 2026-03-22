@@ -1,3 +1,4 @@
+import 'package:biblia/core/utils/app_error_handler.dart';
 import 'package:biblia/domain/entities/book.dart';
 import 'package:biblia/domain/entities/testament.dart';
 import 'package:biblia/domain/usecases/get_books_usecase.dart';
@@ -26,8 +27,9 @@ class BookViewModel extends ChangeNotifier {
     notifyListeners();
     try {
       _books = await _getBooksUseCase();
-    } catch (e) {
-      _errorMessage = "Falha ao carregar livros: $e";
+    } catch (e, st) {
+      AppErrorHandler.log(e, st, context: 'BookViewModel.getBooks');
+      _errorMessage = AppErrorHandler.toUserMessage(e);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -41,8 +43,9 @@ class BookViewModel extends ChangeNotifier {
 
     try {
       _testaments = await _getTestamentsUseCase();
-    } catch (e) {
-      _errorMessage = "Falha ao carregar testamentos: $e";
+    } catch (e, st) {
+      AppErrorHandler.log(e, st, context: 'BookViewModel.getTestaments');
+      _errorMessage = AppErrorHandler.toUserMessage(e);
     } finally {
       _isLoading = false;
       notifyListeners();

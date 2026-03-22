@@ -1,3 +1,4 @@
+import 'package:biblia/core/utils/app_error_handler.dart';
 import 'package:biblia/domain/usecases/get_chapters_usecase.dart';
 import 'package:flutter/material.dart';
 
@@ -21,8 +22,9 @@ class ChapterViewModel extends ChangeNotifier {
     
     try {
       _chapters = await _getChaptersUseCase(bookId: bookId);
-    } catch (e) {
-      _errorMessage = "Falha ao carregar capítulos: $e";
+    } catch (e, st) {
+      AppErrorHandler.log(e, st, context: 'ChapterViewModel.getChapters');
+      _errorMessage = AppErrorHandler.toUserMessage(e);
     } finally {
       _isLoading = false;
       notifyListeners();

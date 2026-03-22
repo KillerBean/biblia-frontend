@@ -1,3 +1,4 @@
+import 'package:biblia/core/utils/app_logger.dart';
 import 'package:biblia/core/utils/config_service.dart';
 import 'package:biblia/core/utils/reference_parser.dart';
 import 'package:biblia/data/datasources/remote/biblia_remote_data_source.dart';
@@ -29,7 +30,7 @@ class FallbackDatabaseRepository extends DatabaseRepository {
       try {
         return await _remoteDataSource.getBooks(testamentId: testament);
       } catch (e) {
-        print('Fallback to local: API failed: $e');
+        appLogger.w('Fallback to local', error: e.runtimeType.toString());
       }
     }
 
@@ -49,7 +50,7 @@ class FallbackDatabaseRepository extends DatabaseRepository {
       try {
         return await _remoteDataSource.getTestaments();
       } catch (e) {
-        print('Fallback to local: API failed: $e');
+        appLogger.w('Fallback to local', error: e.runtimeType.toString());
       }
     }
 
@@ -68,7 +69,7 @@ class FallbackDatabaseRepository extends DatabaseRepository {
       try {
         return await _remoteDataSource.getChapters(bookId);
       } catch (e) {
-        print('Fallback to local: API failed: $e');
+        appLogger.w('Fallback to local', error: e.runtimeType.toString());
       }
     }
 
@@ -86,7 +87,7 @@ class FallbackDatabaseRepository extends DatabaseRepository {
         final book = await _remoteDataSource.findBook(name);
         if (book != null) return book;
       } catch (e) {
-        print('Fallback to local: API failed: $e');
+        appLogger.w('Fallback to local', error: e.runtimeType.toString());
       }
     }
 
@@ -120,7 +121,7 @@ class FallbackDatabaseRepository extends DatabaseRepository {
           endVerse: endVerse,
         );
       } catch (e) {
-        print('Fallback to local: API failed: $e');
+        appLogger.w('Fallback to local', error: e.runtimeType.toString());
       }
     }
 
@@ -155,7 +156,7 @@ class FallbackDatabaseRepository extends DatabaseRepository {
         return await _remoteDataSource.getVerses(
             bookId: bookId, chapterId: chapterId);
       } catch (e) {
-        print('Fallback to local: API failed: $e');
+        appLogger.w('Fallback to local', error: e.runtimeType.toString());
       }
     }
 
@@ -192,7 +193,7 @@ class FallbackDatabaseRepository extends DatabaseRepository {
       try {
         return await _remoteDataSource.searchVerses(query);
       } catch (e) {
-        print('Fallback to local: API failed: $e');
+        appLogger.w('Fallback to local', error: e.runtimeType.toString());
       }
     }
 

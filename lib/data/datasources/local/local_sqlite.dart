@@ -1,6 +1,6 @@
 import 'dart:io';
+import 'package:biblia/core/utils/app_logger.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -32,9 +32,7 @@ class DatabaseRetriever {
     var exists = await databaseExists(path);
 
     if (!exists) {
-      if (kDebugMode) {
-        print("Creating new copy from asset");
-      }
+      appLogger.d('Creating new copy from asset');
       try {
         await Directory(dirname(path)).create(recursive: true);
       } catch (_) {}
@@ -45,9 +43,7 @@ class DatabaseRetriever {
 
       await File(path).writeAsBytes(bytes, flush: true);
     } else {
-      if (kDebugMode) {
-        print("Opening existing database");
-      }
+      appLogger.d('Opening existing database');
     }
     return await openDatabase(path, version: 1);
   }

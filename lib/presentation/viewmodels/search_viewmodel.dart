@@ -1,3 +1,4 @@
+import 'package:biblia/core/utils/app_error_handler.dart';
 import 'package:biblia/domain/entities/verse.dart';
 import 'package:biblia/domain/usecases/search_verses_usecase.dart';
 import 'package:flutter/foundation.dart';
@@ -42,8 +43,9 @@ class SearchViewModel extends ChangeNotifier {
 
     try {
       _verses = await _searchVersesUseCase(query);
-    } catch (e) {
-      _error = 'Erro ao buscar versículos: $e';
+    } catch (e, st) {
+      AppErrorHandler.log(e, st, context: 'SearchViewModel.search');
+      _error = AppErrorHandler.toUserMessage(e);
     } finally {
       _isLoading = false;
       notifyListeners();

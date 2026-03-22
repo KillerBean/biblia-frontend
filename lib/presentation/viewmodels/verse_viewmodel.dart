@@ -1,3 +1,4 @@
+import 'package:biblia/core/utils/app_error_handler.dart';
 import 'package:biblia/domain/entities/verse.dart';
 import 'package:biblia/domain/usecases/get_verses_usecase.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +23,9 @@ class VerseViewModel extends ChangeNotifier {
 
     try {
       _verses = await _getVersesUseCase(bookId: bookId, chapterId: chapterId);
-    } catch (e) {
-      _errorMessage = "Falha ao carregar versículos: $e";
+    } catch (e, st) {
+      AppErrorHandler.log(e, st, context: 'VerseViewModel.getVerses');
+      _errorMessage = AppErrorHandler.toUserMessage(e);
     } finally {
       _isLoading = false;
       notifyListeners();

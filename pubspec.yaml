@@ -42,6 +42,7 @@ dependencies:
   flutter_modular: ^6.4.1
   dio: ^5.9.0
   shared_preferences: ^2.5.3
+  logger: ^2.4.0
 
 dev_dependencies:
   flutter_test:

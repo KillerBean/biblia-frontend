@@ -1,4 +1,5 @@
 import 'package:biblia/core/utils/config_service.dart';
+import 'package:biblia/core/utils/https_interceptor.dart';
 import 'package:biblia/core/utils/shared_pref_config_service.dart';
 import 'package:biblia/data/datasources/remote/biblia_remote_data_source.dart';
 import 'package:biblia/data/repositories/fallback_database_repository.dart';
@@ -16,6 +17,7 @@ import 'package:biblia/presentation/widgets/bookpage_widget.dart';
 import 'package:biblia/presentation/widgets/chapterpage_widget.dart';
 import 'package:biblia/presentation/widgets/homepage_widget.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class BookModule extends Module {
@@ -23,7 +25,15 @@ class BookModule extends Module {
   void binds(i) {
     // Config and Network
     i.addLazySingleton<ConfigService>(SharedPrefConfigService.new);
-    i.addLazySingleton(() => Dio());
+    i.addLazySingleton(() {
+      final dio = Dio(BaseOptions(
+        connectTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 15),
+        sendTimeout: const Duration(seconds: 10),
+      ));
+      dio.interceptors.add(HttpsInterceptor());
+      return dio;
+    });
     i.addLazySingleton(BibliaRemoteDataSource.new);
 
     // Repository
@@ -47,10 +57,16 @@ class BookModule extends Module {
   void routes(r) {
     r.child('/',
         child: (context) => const HomePageWidget(title: "Bíblia Sagrada"));
-    r.child('/book/:bookid',
-        child: (context) =>
-            BookPageWidget(bookId: int.parse(r.args.params["bookid"])));
+    r.child('/book/:bookid', child: (context) {
+      final bookId = int.tryParse(r.args.params["bookid"] ?? '') ?? 0;
+      if (bookId <= 0) return const SizedBox.shrink();
+      return BookPageWidget(bookId: bookId);
+    });
     r.child('/book/:bookid/:chapterid', child: (context) {
+      final bookId = int.tryParse(r.args.params["bookid"] ?? '') ?? 0;
+      final chapterId = int.tryParse(r.args.params["chapterid"] ?? '') ?? 0;
+      if (bookId <= 0 || chapterId <= 0) return const SizedBox.shrink();
+
       final highlightParam = r.args.queryParams['highlight'];
       final verseIdParam = r.args.queryParams['verseId'];
 
@@ -67,8 +83,8 @@ class BookModule extends Module {
       }
 
       return ChapterPageWidget(
-          bookId: int.parse(r.args.params["bookid"]),
-          chapterId: int.parse(r.args.params["chapterid"]),
+          bookId: bookId,
+          chapterId: chapterId,
           highlightedVerses: highlights);
     });
   }

@@ -5,22 +5,49 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com).
 
 ---
 
+## [2026-03-30]
+
+### Changed
+- **Docs reorganização**: TODO.md, NEXT-STEPS.md movidos para `docs/`
+- TODO.md expandido: 74 linhas de tarefas (segurança, testes, features, perf)
+
+---
+
+## [2026-03-22] — Security Hardening
+
+### Added
+- `AppLogger` (logger v2.4.0): logging estruturado, silent em release
+- `AppErrorHandler`: mensagens genéricas ao user, nunca expõe URLs/stack traces
+- `HttpsInterceptor`: bloqueia HTTP em release (Dio)
+- Android Network Security Config: cleartext bloqueado em produção
+
+### Fixed
+- Dio com timeouts (connect: 10s, receive: 15s, send: 10s)
+- 18x `print()` → `appLogger` em data layer
+- 4 ViewModels: não expõem mais detalhes de exceção na UI
+- `int.tryParse()` em rotas — evita crash por deep link malformado
+
+### Changed
+- `avoid_print` habilitado no lint — zero prints em produção
+- `analysis_options.yaml` atualizado
+
+---
+
 ## [2026-03-21]
 
 ### Added
-- Screenshot do feature de captura/seleção de versículos
-- **CLAUDE.md**: Documentação completa com arquitetura, padrões e guidelines (testing, performance)
-- **TODO.md**: Roadmap detalhado com features pendentes e tarefas técnicas
-- Histórico completo de commits no changelog
+- Screenshot captura/seleção de versículos
+- **CLAUDE.md**: arquitetura, padrões, testing, performance
+- **TODO.md**: roadmap detalhado
 
 ### Fixed
-- Aviso de método obsoleto (`withOpacity` → `.withValues`) resolvido
-- Altura de linha dos versículos ajustada com `StrutStyle` para melhor legibilidade
+- `withOpacity` → `.withValues` (obsoleto)
+- Altura de linha versículos (StrutStyle)
 
 ### Changed
-- Melhoria na UX da seleção e cópia de versículos
-- Espaçamentos nas listagens de versículos melhor distribuídos
-- Cobertura de testes do `ReferenceParser` expandida
+- UX seleção/cópia versículos
+- Espaçamentos nas listagens
+- Cobertura testes ReferenceParser
 
 ---
 

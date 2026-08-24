@@ -21,7 +21,7 @@ void main() {
     mockDatabase = MockDatabase();
     mockRemoteDataSource = MockBibliaRemoteDataSource();
     mockConfigService = MockConfigService();
-    
+
     // Default to offline mode for existing tests
     when(mockConfigService.isApiEnabled()).thenAnswer((_) async => false);
 
@@ -190,9 +190,14 @@ void main() {
         // Arrange
         when(mockConfigService.isApiEnabled()).thenAnswer((_) async => true);
         final expectedBooks = [
-          Book(id: 1, bookReferenceId: 1, testamentReferenceId: 1, name: 'Genesis API')
+          Book(
+              id: 1,
+              bookReferenceId: 1,
+              testamentReferenceId: 1,
+              name: 'Genesis API')
         ];
-        when(mockRemoteDataSource.getBooks(testamentId: anyNamed('testamentId')))
+        when(mockRemoteDataSource.getBooks(
+                testamentId: anyNamed('testamentId')))
             .thenAnswer((_) async => expectedBooks);
 
         // Act
@@ -200,19 +205,27 @@ void main() {
 
         // Assert
         expect(result, expectedBooks);
-        verify(mockRemoteDataSource.getBooks(testamentId: anyNamed('testamentId'))).called(1);
+        verify(mockRemoteDataSource.getBooks(
+                testamentId: anyNamed('testamentId')))
+            .called(1);
         verifyNever(mockDatabase.query(any, columns: anyNamed('columns')));
       });
 
       test('should fallback to local db when API fails', () async {
         // Arrange
         when(mockConfigService.isApiEnabled()).thenAnswer((_) async => true);
-        when(mockRemoteDataSource.getBooks(testamentId: anyNamed('testamentId')))
+        when(mockRemoteDataSource.getBooks(
+                testamentId: anyNamed('testamentId')))
             .thenThrow(Exception('API Error'));
-        
+
         // Mock local DB response
         final localData = [
-          {'id': 1, 'book_reference_id': 1, 'testament_reference_id': 1, 'name': 'Genesis Local'}
+          {
+            'id': 1,
+            'book_reference_id': 1,
+            'testament_reference_id': 1,
+            'name': 'Genesis Local'
+          }
         ];
         when(mockDatabase.query('book', columns: anyNamed('columns')))
             .thenAnswer((_) async => localData);
@@ -222,10 +235,27 @@ void main() {
 
         // Assert
         expect(result.first.name, 'Genesis Local');
-        verify(mockRemoteDataSource.getBooks(testamentId: anyNamed('testamentId'))).called(1);
-        verify(mockDatabase.query('book', columns: anyNamed('columns'))).called(1);
+        verify(mockRemoteDataSource.getBooks(
+                testamentId: anyNamed('testamentId')))
+            .called(1);
+        verify(mockDatabase.query('book', columns: anyNamed('columns')))
+            .called(1);
       });
     });
 
+    group('security', () {
+      test('escapes SQL LIKE wildcards before local full-text search',
+          () async {
+        when(mockDatabase.rawQuery(any, any)).thenAnswer((_) async => []);
+
+        await repository.searchVerses(r'100%_safe');
+
+        expect(escapeSqlLikePattern(r'100%_safe'), r'100\%\_safe');
+        verify(mockDatabase.rawQuery(
+          any,
+          [r'%100\%\_safe%'],
+        )).called(1);
+      });
+    });
   });
 }

@@ -1,0 +1,6 @@
+# Copy to android/key.properties locally and never commit the real file.
+# Alternatively provide the equivalent ANDROID_* environment variables in CI.
+storePassword=CHANGE_ME
+keyPassword=CHANGE_ME
+keyAlias=biblia
+storeFile=/absolute/path/to/release.jks

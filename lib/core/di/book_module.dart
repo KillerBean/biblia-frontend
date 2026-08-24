@@ -34,7 +34,9 @@ class BookModule extends Module {
       dio.interceptors.add(HttpsInterceptor());
       return dio;
     });
-    i.addLazySingleton(BibliaRemoteDataSource.new);
+    i.addLazySingleton(() => BibliaRemoteDataSource(
+          baseUrl: const String.fromEnvironment('API_BASE_URL'),
+        ));
 
     // Repository
     i.addLazySingleton<DatabaseRepository>(FallbackDatabaseRepository.new);
@@ -83,9 +85,7 @@ class BookModule extends Module {
       }
 
       return ChapterPageWidget(
-          bookId: bookId,
-          chapterId: chapterId,
-          highlightedVerses: highlights);
+          bookId: bookId, chapterId: chapterId, highlightedVerses: highlights);
     });
   }
 }

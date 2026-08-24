@@ -25,7 +25,7 @@ class VerseViewModel extends ChangeNotifier {
       _verses = await _getVersesUseCase(bookId: bookId, chapterId: chapterId);
     } catch (e, st) {
       AppErrorHandler.log(e, st, context: 'VerseViewModel.getVerses');
-      _errorMessage = AppErrorHandler.toUserMessage(e);
+      _errorMessage = 'Falha ao carregar versículos. Tente novamente.';
     } finally {
       _isLoading = false;
       notifyListeners();

@@ -9,6 +9,9 @@ import 'package:biblia/data/datasources/local/local_sqlite.dart';
 import 'package:biblia/domain/repositories/database_repository.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
+String escapeSqlLikePattern(String value) =>
+    value.replaceAll(r'\', r'\\').replaceAll('%', r'\%').replaceAll('_', r'\_');
+
 class FallbackDatabaseRepository extends DatabaseRepository {
   final Future<Database> Function() _dbProvider;
   final BibliaRemoteDataSource _remoteDataSource;
@@ -230,9 +233,10 @@ class FallbackDatabaseRepository extends DatabaseRepository {
     List<Verse> verses = [];
     final db = await _dbProvider();
 
+    final safeQuery = escapeSqlLikePattern(query);
     final rawVerses = await db.rawQuery(
-      "SELECT v.*, b.name as book_name FROM verse v JOIN book b ON v.book_id = b.id WHERE v.text LIKE ? LIMIT 100",
-      ['%$query%'],
+      r"SELECT v.*, b.name as book_name FROM verse v JOIN book b ON v.book_id = b.id WHERE v.text LIKE ? ESCAPE '\' LIMIT 100",
+      ['%$safeQuery%'],
     );
 
     for (final item in rawVerses) {
@@ -242,4 +246,3 @@ class FallbackDatabaseRepository extends DatabaseRepository {
     return verses;
   }
 }
-

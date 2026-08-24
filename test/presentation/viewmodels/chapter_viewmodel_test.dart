@@ -50,7 +50,8 @@ void main() {
       });
     });
 
-    test('getChapters should set errorMessage when an exception occurs', () async {
+    test('getChapters should set errorMessage when an exception occurs',
+        () async {
       // Arrange
       final exception = Exception('Database error');
       when(mockGetChaptersUseCase.call(bookId: 1)).thenThrow(exception);
@@ -60,7 +61,8 @@ void main() {
 
       // Assert
       expect(chapterViewModel.numChapters, 0);
-      expect(chapterViewModel.errorMessage, contains('Falha ao carregar capítulos'));
+      expect(chapterViewModel.errorMessage,
+          contains('Falha ao carregar capítulos'));
       expect(chapterViewModel.isLoading, isFalse);
     });
   });

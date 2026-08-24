@@ -19,7 +19,8 @@ void main() {
   group('GetChaptersUseCase', () {
     test('should call getChapters on the repository', () async {
       // Arrange
-      when(mockDatabaseRepository.getChapters(bookId: 1)).thenAnswer((_) async => 10);
+      when(mockDatabaseRepository.getChapters(bookId: 1))
+          .thenAnswer((_) async => 10);
 
       // Act
       await getChaptersUseCase.call(bookId: 1);

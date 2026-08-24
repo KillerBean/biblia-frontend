@@ -21,7 +21,10 @@ void main() {
     test('getVerses should call GetVersesUseCase and update verses list',
         () async {
       // Arrange
-      final verses = [Verse(id: 1, bookId: 1, chapter: 1, verse: 1, text: 'In the beginning...')];
+      final verses = [
+        Verse(
+            id: 1, bookId: 1, chapter: 1, verse: 1, text: 'In the beginning...')
+      ];
       when(mockGetVersesUseCase.call(bookId: 1, chapterId: 1))
           .thenAnswer((_) async => verses);
 
@@ -35,7 +38,8 @@ void main() {
 
     test('isLoading should be true while fetching data', () {
       // Arrange
-      when(mockGetVersesUseCase.call(bookId: 1, chapterId: 1)).thenAnswer((_) async {
+      when(mockGetVersesUseCase.call(bookId: 1, chapterId: 1))
+          .thenAnswer((_) async {
         await Future.delayed(const Duration(milliseconds: 100));
         return [];
       });
@@ -53,17 +57,20 @@ void main() {
       });
     });
 
-    test('getVerses should set errorMessage when an exception occurs', () async {
+    test('getVerses should set errorMessage when an exception occurs',
+        () async {
       // Arrange
       final exception = Exception('Database error');
-      when(mockGetVersesUseCase.call(bookId: 1, chapterId: 1)).thenThrow(exception);
+      when(mockGetVersesUseCase.call(bookId: 1, chapterId: 1))
+          .thenThrow(exception);
 
       // Act
       await verseViewModel.getVerses(bookId: 1, chapterId: 1);
 
       // Assert
       expect(verseViewModel.verses, isEmpty);
-      expect(verseViewModel.errorMessage, contains('Falha ao carregar versículos'));
+      expect(verseViewModel.errorMessage,
+          contains('Falha ao carregar versículos'));
       expect(verseViewModel.isLoading, isFalse);
     });
   });

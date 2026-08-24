@@ -27,7 +27,8 @@ class AppErrorHandler {
           'Sem conexão. Verifique sua internet.',
         DioExceptionType.receiveTimeout =>
           'O servidor demorou demais. Tente novamente.',
-        DioExceptionType.sendTimeout => 'Falha ao enviar dados. Tente novamente.',
+        DioExceptionType.sendTimeout =>
+          'Falha ao enviar dados. Tente novamente.',
         DioExceptionType.badResponse => 'Serviço indisponível.',
         DioExceptionType.cancel => 'Requisição cancelada.',
         _ => 'Erro de conexão.',

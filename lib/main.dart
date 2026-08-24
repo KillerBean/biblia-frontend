@@ -6,7 +6,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  WakelockPlus.enable();
+  await WakelockPlus.enable();
   runApp(ModularApp(module: AppModule(), child: const MainAppWidget()));
 }
 

@@ -17,14 +17,18 @@ void main() {
   setUp(() {
     mockGetBooksUseCase = MockGetBooksUseCase();
     mockGetTestamentsUseCase = MockGetTestamentsUseCase();
-    bookViewModel = BookViewModel(mockGetBooksUseCase, mockGetTestamentsUseCase);
+    bookViewModel =
+        BookViewModel(mockGetBooksUseCase, mockGetTestamentsUseCase);
   });
 
   group('BookViewModel', () {
     test('getBooks should call GetBooksUseCase and update books list',
         () async {
       // Arrange
-      final books = [Book(id: 1, name: 'Genesis', testamentReferenceId: 1, bookReferenceId: 1)];
+      final books = [
+        Book(
+            id: 1, name: 'Genesis', testamentReferenceId: 1, bookReferenceId: 1)
+      ];
       when(mockGetBooksUseCase.call()).thenAnswer((_) async => books);
 
       // Act
@@ -35,7 +39,8 @@ void main() {
       verify(mockGetBooksUseCase.call());
     });
 
-    test('getTestaments should call GetTestamentsUseCase and update testaments list',
+    test(
+        'getTestaments should call GetTestamentsUseCase and update testaments list',
         () async {
       // Arrange
       when(mockGetTestamentsUseCase.call()).thenAnswer((_) async => []);
@@ -81,7 +86,8 @@ void main() {
       expect(bookViewModel.isLoading, isFalse);
     });
 
-    test('getTestaments should set errorMessage when an exception occurs', () async {
+    test('getTestaments should set errorMessage when an exception occurs',
+        () async {
       // Arrange
       final exception = Exception('Network error');
       when(mockGetTestamentsUseCase.call()).thenThrow(exception);
@@ -91,7 +97,8 @@ void main() {
 
       // Assert
       expect(bookViewModel.testaments, isEmpty);
-      expect(bookViewModel.errorMessage, contains('Falha ao carregar testamentos'));
+      expect(bookViewModel.errorMessage,
+          contains('Falha ao carregar testamentos'));
       expect(bookViewModel.isLoading, isFalse);
     });
   });

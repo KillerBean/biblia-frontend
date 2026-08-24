@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:biblia/core/utils/app_error_handler.dart';
 import 'package:biblia/domain/entities/verse.dart';
 import 'package:biblia/domain/usecases/search_verses_usecase.dart';
 import 'package:flutter/foundation.dart';
 
 class SearchViewModel extends ChangeNotifier {
+  static const int maxQueryLength = 200;
+  static const Duration searchDebounce = Duration(milliseconds: 450);
+
   final SearchVersesUseCase _searchVersesUseCase;
 
   SearchViewModel(this._searchVersesUseCase);
@@ -18,37 +23,68 @@ class SearchViewModel extends ChangeNotifier {
   String get error => _error;
 
   String? _lastQuery;
+  Timer? _debounce;
+  int _requestVersion = 0;
 
   Future<void> search(String query) async {
-    if (query.isEmpty) {
+    _debounce?.cancel();
+    final requestVersion = ++_requestVersion;
+    final normalizedQuery = query.trim();
+
+    if (normalizedQuery.isEmpty) {
       _verses = [];
       _lastQuery = null;
-      notifyListeners();
-      return;
-    }
-
-    if (query == _lastQuery && (_verses.isNotEmpty || _error.isNotEmpty)) {
-      return;
-    }
-
-    _lastQuery = query;
-    _isLoading = true;
-    _error = '';
-    // Notify to show loading state
-    // We must check if we are already notifying to avoid "Notify during build" if called from build
-    // But since this is async, it will schedule a microtask usually, but setting _isLoading synchronously changes state.
-    // To be safe from build-phase errors, we might need to schedule this.
-    // However, for now, let's just proceed.
-    notifyListeners();
-
-    try {
-      _verses = await _searchVersesUseCase(query);
-    } catch (e, st) {
-      AppErrorHandler.log(e, st, context: 'SearchViewModel.search');
-      _error = AppErrorHandler.toUserMessage(e);
-    } finally {
       _isLoading = false;
       notifyListeners();
+      return;
     }
+
+    if (normalizedQuery.length > maxQueryLength) {
+      _verses = [];
+      _lastQuery = normalizedQuery;
+      _isLoading = false;
+      _error = 'Busca muito longa. Máximo de $maxQueryLength caracteres.';
+      notifyListeners();
+      return;
+    }
+
+    if (normalizedQuery == _lastQuery &&
+        (_verses.isNotEmpty || _error.isNotEmpty)) {
+      return;
+    }
+
+    _lastQuery = normalizedQuery;
+    _isLoading = true;
+    _error = '';
+    notifyListeners();
+
+    _debounce = Timer(searchDebounce, () {
+      unawaited(_executeSearch(normalizedQuery, requestVersion));
+    });
+  }
+
+  Future<void> _executeSearch(String query, int requestVersion) async {
+    if (requestVersion != _requestVersion) return;
+
+    try {
+      final verses = await _searchVersesUseCase(query);
+      if (requestVersion == _requestVersion) _verses = verses;
+    } catch (e, st) {
+      if (requestVersion == _requestVersion) {
+        AppErrorHandler.log(e, st, context: 'SearchViewModel.search');
+        _error = AppErrorHandler.toUserMessage(e);
+      }
+    } finally {
+      if (requestVersion == _requestVersion) {
+        _isLoading = false;
+        notifyListeners();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
   }
 }

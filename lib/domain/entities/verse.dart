@@ -15,13 +15,18 @@ class Verse {
     this.bookName,
   });
 
-  Verse.fromMap(Map<String, dynamic> res)
-      : id = res["id"],
-        bookId = res["book_id"] ?? res['book']?['id'],
-        chapter = res["chapter"],
-        verse = res["verse"],
-        text = res["text"],
-        bookName = res["book_name"] ?? res['book']?['name'];
+  factory Verse.fromMap(Map<String, dynamic> res) {
+    final nestedBook = res['book'] as Map<String, dynamic>?;
+
+    return Verse(
+      id: res['id'] as int,
+      bookId: (res['book_id'] as int?) ?? (nestedBook?['id'] as int),
+      chapter: res['chapter'] as int,
+      verse: res['verse'] as int,
+      text: res['text'] as String,
+      bookName: (res['book_name'] as String?) ?? nestedBook?['name'] as String?,
+    );
+  }
 
   Map<String, Object?> toMap() {
     return {

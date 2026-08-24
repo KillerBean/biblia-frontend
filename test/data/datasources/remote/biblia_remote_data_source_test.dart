@@ -7,6 +7,8 @@ import 'package:mockito/mockito.dart';
 
 import 'biblia_remote_data_source_test.mocks.dart';
 
+const tBaseUrl = 'https://api.example.test';
+
 @GenerateMocks([Dio])
 void main() {
   late BibliaRemoteDataSource dataSource;
@@ -14,12 +16,10 @@ void main() {
 
   setUp(() {
     mockDio = MockDio();
-    dataSource = BibliaRemoteDataSource(dio: mockDio);
+    dataSource = BibliaRemoteDataSource(dio: mockDio, baseUrl: tBaseUrl);
   });
 
   group('BibliaRemoteDataSource', () {
-    const tBaseUrl = 'http://localhost';
-
     group('getChapters', () {
       test('should call the correct endpoint /books/{bookId}/chapters',
           () async {

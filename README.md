@@ -14,8 +14,8 @@ git clone <repo>
 cd biblia_front
 flutter pub get
 
-# Executar app
-flutter run
+# Executar app com API remota (HTTPS)
+flutter run --dart-define=API_BASE_URL=https://api.biblia.roseno.dev
 
 # Rodar testes
 flutter test
@@ -23,6 +23,28 @@ flutter test
 # Análise estática
 flutter analyze
 ```
+
+Sem `API_BASE_URL`, o app permanece no modo offline e usa o banco ARC local.
+
+## 🔐 Release Android
+
+O `applicationId` de produção é `dev.roseno.biblia`. Para uma build release, configure
+`android/key.properties` a partir de [android/key.properties.example](android/key.properties.example)
+ou use as variáveis `ANDROID_KEYALIAS`, `ANDROID_KEYPASSWORD`, `ANDROID_STOREFILE` e
+`ANDROID_STOREPASSWORD`. A assinatura de debug só pode ser usada explicitamente para testes locais
+com `-PallowDebugSigning=true`.
+
+Exemplo:
+
+```bash
+flutter build apk --release \
+  --dart-define=API_BASE_URL=https://api.biblia.roseno.dev \
+  --obfuscate \
+  --split-debug-info=build/symbols
+```
+
+Consulte [docs/DATA-ASSETS.md](docs/DATA-ASSETS.md), [docs/architecture/ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md)
+e [SECURITY.md](SECURITY.md) para as políticas de dados, arquitetura e reporte de vulnerabilidades.
 
 ---
 

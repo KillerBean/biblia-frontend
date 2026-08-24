@@ -29,7 +29,7 @@ class BookViewModel extends ChangeNotifier {
       _books = await _getBooksUseCase();
     } catch (e, st) {
       AppErrorHandler.log(e, st, context: 'BookViewModel.getBooks');
-      _errorMessage = AppErrorHandler.toUserMessage(e);
+      _errorMessage = 'Falha ao carregar livros. Tente novamente.';
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -45,7 +45,7 @@ class BookViewModel extends ChangeNotifier {
       _testaments = await _getTestamentsUseCase();
     } catch (e, st) {
       AppErrorHandler.log(e, st, context: 'BookViewModel.getTestaments');
-      _errorMessage = AppErrorHandler.toUserMessage(e);
+      _errorMessage = 'Falha ao carregar testamentos. Tente novamente.';
     } finally {
       _isLoading = false;
       notifyListeners();

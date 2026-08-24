@@ -25,6 +25,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   Future<void> _loadConfig() async {
     final config = Modular.get<ConfigService>();
     final enabled = await config.isApiEnabled();
+    if (!mounted) return;
     setState(() {
       _isApiEnabled = enabled;
     });
@@ -33,6 +34,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   Future<void> _toggleApi(bool value) async {
     final config = Modular.get<ConfigService>();
     await config.setApiEnabled(value);
+    if (!mounted) return;
     setState(() {
       _isApiEnabled = value;
     });

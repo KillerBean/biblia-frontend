@@ -42,7 +42,8 @@ void main() {
     // Ensure we use the local DB by default
     when(mockConfigService.isApiEnabled()).thenAnswer((_) async => false);
 
-    repository = FallbackDatabaseRepository(mockRemoteDataSource, mockConfigService);
+    repository =
+        FallbackDatabaseRepository(mockRemoteDataSource, mockConfigService);
   });
 
   tearDown(() async {

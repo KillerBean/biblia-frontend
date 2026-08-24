@@ -10,7 +10,7 @@ class ParsedReference {
     this.startVerse,
     this.endVerse,
   });
-  
+
   @override
   String toString() {
     String ref = '$bookName $chapter';
@@ -40,7 +40,7 @@ class ReferenceParser {
     // "Gn 1:1"
     // "Gn 1:1-5"
     // "1 John 2:3"
-    
+
     final regex = RegExp(
       r'^((?:\d\s*)?[a-zA-ZÀ-ÿ]+(?:\s+[a-zA-ZÀ-ÿ]+)*)\s+(\d+)(?::(\d+)(?:-(\d+))?)?$',
     );

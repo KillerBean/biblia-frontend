@@ -8,8 +8,9 @@ class BibliaRemoteDataSource {
   final Dio _dio;
   final String baseUrl;
 
-  BibliaRemoteDataSource({Dio? dio, this.baseUrl = 'http://localhost'})
-      : _dio = dio ?? Dio();
+  BibliaRemoteDataSource({Dio? dio, String? baseUrl})
+      : _dio = dio ?? Dio(),
+        baseUrl = baseUrl ?? const String.fromEnvironment('API_BASE_URL');
 
   Future<List<Book>> getBooks({int? testamentId}) async {
     try {
@@ -24,7 +25,8 @@ class BibliaRemoteDataSource {
         return (response.data as List).map((e) => Book.fromMap(e)).toList();
       }
     } catch (e) {
-      appLogger.w('API Error getBooks', error: e is DioException ? e.message : null);
+      appLogger.w('API Error getBooks',
+          error: e is DioException ? e.message : null);
     }
     throw Exception('Failed to load books from API');
   }
@@ -39,7 +41,8 @@ class BibliaRemoteDataSource {
             .toList();
       }
     } catch (e) {
-      appLogger.w('API Error getTestaments', error: e is DioException ? e.message : null);
+      appLogger.w('API Error getTestaments',
+          error: e is DioException ? e.message : null);
     }
     throw Exception('Failed to load testaments from API');
   }
@@ -53,7 +56,8 @@ class BibliaRemoteDataSource {
         return chapters.length;
       }
     } catch (e) {
-      appLogger.w('API Error getChapters', error: e is DioException ? e.message : null);
+      appLogger.w('API Error getChapters',
+          error: e is DioException ? e.message : null);
     }
     throw Exception('Failed to load chapters count from API');
   }
@@ -77,7 +81,8 @@ class BibliaRemoteDataSource {
         return (response.data as List).map((e) => Verse.fromMap(e)).toList();
       }
     } catch (e) {
-      appLogger.w('API Error getVerses', error: e is DioException ? e.message : null);
+      appLogger.w('API Error getVerses',
+          error: e is DioException ? e.message : null);
     }
     throw Exception('Failed to load verses from API');
   }
@@ -102,7 +107,8 @@ class BibliaRemoteDataSource {
         return (response.data as List).map((e) => Verse.fromMap(e)).toList();
       }
     } catch (e) {
-      appLogger.w('API Error getVersesByRange', error: e is DioException ? e.message : null);
+      appLogger.w('API Error getVersesByRange',
+          error: e is DioException ? e.message : null);
     }
     throw Exception('Failed to load verses range from API');
   }
@@ -115,16 +121,16 @@ class BibliaRemoteDataSource {
       );
 
       if (response.statusCode == 200) {
-        final books = (response.data as List)
-            .map((e) => Book.fromMap(e))
-            .toList();
+        final books =
+            (response.data as List).map((e) => Book.fromMap(e)).toList();
 
         if (books.isNotEmpty) {
           return books.first;
         }
       }
     } catch (e) {
-      appLogger.w('API Error findBook', error: e is DioException ? e.message : null);
+      appLogger.w('API Error findBook',
+          error: e is DioException ? e.message : null);
     }
     return null;
   }
@@ -141,7 +147,8 @@ class BibliaRemoteDataSource {
       }
     } catch (e) {
       // Never log response data — may contain sensitive content.
-      appLogger.w('API Error searchVerses', error: e is DioException ? e.message : null);
+      appLogger.w('API Error searchVerses',
+          error: e is DioException ? e.message : null);
     }
     return [];
   }

@@ -38,7 +38,7 @@ void main() {
       expect(refs.first.startVerse, 9);
     });
 
-     test('should parse multiple references "Gn 1; Ex 2"', () {
+    test('should parse multiple references "Gn 1; Ex 2"', () {
       final refs = ReferenceParser.parse('Gn 1; Ex 2');
       expect(refs.length, 2);
       expect(refs[0].bookName, 'Gn');

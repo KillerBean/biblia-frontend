@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:biblia/domain/entities/book.dart';
+import 'package:biblia/domain/entities/testament.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -7,7 +9,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 class GridListItemsWidget extends StatefulWidget {
   GridListItemsWidget(
       {super.key, required this.items, this.path, required this.fieldName});
-  final List<dynamic> items;
+  final List<Object> items;
   final String? path;
   final String fieldName;
   final double tileHeight =
@@ -18,6 +20,15 @@ class GridListItemsWidget extends StatefulWidget {
 }
 
 class _GridListItemsWidgetState extends State<GridListItemsWidget> {
+  Map<String, Object?> _toMap(Object item) {
+    return switch (item) {
+      Book book => book.toMap(),
+      Testament testament => testament.toMap(),
+      _ =>
+        throw ArgumentError('Unsupported grid item type: ${item.runtimeType}'),
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -34,7 +45,7 @@ class _GridListItemsWidgetState extends State<GridListItemsWidget> {
         itemBuilder: (_, index) => GestureDetector(
           onTap: () {
             if (widget.path != null) {
-              final itemId = (widget.items[index]).toMap()['id'];
+              final itemId = _toMap(widget.items[index])['id'];
               Modular.to.pushNamed("/${widget.path}/$itemId");
             }
           },
@@ -57,7 +68,8 @@ class _GridListItemsWidgetState extends State<GridListItemsWidget> {
                     color: Theme.of(context).colorScheme.primary,
                     decoration: TextDecoration.none,
                   ),
-                  (widget.items[index]).toMap()[widget.fieldName],
+                  _toMap(widget.items[index])[widget.fieldName]?.toString() ??
+                      '',
                 ),
               ),
             ),

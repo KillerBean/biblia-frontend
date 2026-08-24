@@ -19,12 +19,12 @@ class ChapterViewModel extends ChangeNotifier {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
-    
+
     try {
       _chapters = await _getChaptersUseCase(bookId: bookId);
     } catch (e, st) {
       AppErrorHandler.log(e, st, context: 'ChapterViewModel.getChapters');
-      _errorMessage = AppErrorHandler.toUserMessage(e);
+      _errorMessage = 'Falha ao carregar capítulos. Tente novamente.';
     } finally {
       _isLoading = false;
       notifyListeners();

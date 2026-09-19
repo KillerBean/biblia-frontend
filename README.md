@@ -15,7 +15,7 @@ cd biblia_front
 flutter pub get
 
 # Executar app com API remota (HTTPS)
-flutter run --dart-define=API_BASE_URL=https://api.biblia.roseno.dev
+flutter run --dart-define=API_BASE_URL=https://api-biblia.roseno.dev
 
 # Rodar testes
 flutter test
@@ -38,7 +38,7 @@ Exemplo:
 
 ```bash
 flutter build apk --release \
-  --dart-define=API_BASE_URL=https://api.biblia.roseno.dev \
+  --dart-define=API_BASE_URL=https://api-biblia.roseno.dev \
   --obfuscate \
   --split-debug-info=build/symbols
 ```

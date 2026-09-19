@@ -44,7 +44,7 @@ jobs:
         run: flutter pub outdated --no-transitive
 
       - name: Build Android debug artifact
-        run: flutter build apk --debug --dart-define=API_BASE_URL=https://api.biblia.roseno.dev
+        run: flutter build apk --debug --dart-define=API_BASE_URL=https://api-biblia.roseno.dev
 
   secrets:
     name: Secret scan

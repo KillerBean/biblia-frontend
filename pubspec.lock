@@ -37,10 +37,10 @@ packages:
     dependency: transitive
     description:
       name: auto_injector
-      sha256: "1fc2624898e92485122eb2b1698dd42511d7ff6574f84a3a8606fc4549a1e8f8"
+      sha256: "81815294ad9a512e294d97819bdbeccc7f93f18daeceac321e0c046a6f25eeb1"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.1"
+    version: "2.2.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -258,10 +258,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_modular
-      sha256: "33a63d9fe61429d12b3dfa04795ed890f17d179d3d38e988ba7969651fcd5586"
+      sha256: "4b617cd1f2a4248c5bbad75a1e3a0dc4f2196668bbdb86b33d22dfb614d9112d"
       url: "https://pub.dev"
     source: hosted
-    version: "6.4.1"
+    version: "7.1.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -424,14 +424,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.8.1"
-  modular_core:
-    dependency: transitive
-    description:
-      name: modular_core
-      sha256: "1db0420a0dfb8a2c6dca846e7cbaa4ffeb778e247916dbcb27fb25aa566e5436"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.4.1"
   native_toolchain_c:
     dependency: transitive
     description:
@@ -544,14 +536,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.0"
-  result_dart:
-    dependency: transitive
-    description:
-      name: result_dart
-      sha256: "0666b21fbdf697b3bdd9986348a380aa204b3ebe7c146d8e4cdaa7ce735e6054"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.1"
   shared_preferences:
     dependency: "direct main"
     description:

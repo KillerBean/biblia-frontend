@@ -5,6 +5,24 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com).
 
 ---
 
+## [Unreleased]
+
+### Added
+- CI (GitHub Actions), `SECURITY.md`, `docs/DATA-ASSETS.md` e docs de arquitetura/compliance (`docs/architecture/`, `docs/roadmap/`)
+- Assinatura de release Android via `key.properties` (modelo em `android/key.properties.example`)
+- Instruções do agente de código no repositório
+- Dependabot configurado para atualizações de dependências (#1)
+
+### Changed
+- Frontend adequado à API Biblia: data source remoto, repositório com fallback, entidade `Verse` e ViewModels ajustados
+- Package Android renomeado de `com.example.biblia` para `dev.roseno.biblia`; Gradle wrapper e `settings.gradle` atualizados
+- Dependências atualizadas: grupo minor/patch do pub (#6), Kotlin Android 2.4.21 (#3), `cupertino_icons` 2.0.0 (#8)
+
+### Fixed
+- Uso do hostname canônico da API Biblia (código, CI e README)
+
+---
+
 ## [2026-03-30]
 
 ### Changed

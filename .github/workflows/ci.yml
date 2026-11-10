@@ -1,23 +1,39 @@
 name: Flutter CI
 
+# Sem push em master: o PR já validou e a master só muda via PR.
 on:
-  push:
-    branches: [master]
   pull_request:
     branches: [master]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths-ignore: ['**.md', 'docs/**']
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+# Um CI por PR; novo push cancela o anterior.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   quality:
     name: Analyze, test and build
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
+
+      # JDK fixo: ubuntu-latest passou a usar Java 25, incompatível com Gradle 8.14.
+      - name: Set up Java
+        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '17'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
@@ -48,7 +64,10 @@ jobs:
 
   secrets:
     name: Secret scan
+    # Só em PR: base/head do TruffleHog dependem do evento de PR.
+    if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout full history
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4

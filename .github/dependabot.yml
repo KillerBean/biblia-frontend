@@ -1,9 +1,11 @@
+# Padrão: semanal (segunda 09:00), até 5 PRs por ecossistema, minor/patch agrupados.
 version: 2
 updates:
   - package-ecosystem: "pub"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
+      day: "monday"
       time: "09:00"
       timezone: "America/Sao_Paulo"
     open-pull-requests-limit: 5
@@ -21,7 +23,8 @@ updates:
   - package-ecosystem: "gradle"
     directory: "/android"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
+      day: "monday"
       time: "09:00"
       timezone: "America/Sao_Paulo"
     open-pull-requests-limit: 5
@@ -39,7 +42,8 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
+      day: "monday"
       time: "09:00"
       timezone: "America/Sao_Paulo"
     open-pull-requests-limit: 5

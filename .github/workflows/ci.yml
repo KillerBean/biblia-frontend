@@ -28,6 +28,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      # JDK fixo: ubuntu-latest passou a usar Java 25, incompatível com Gradle 8.14.
+      - name: Set up Java
+        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '17'
+
       - name: Set up Flutter
         uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:

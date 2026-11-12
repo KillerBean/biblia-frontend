@@ -1,6 +1,6 @@
 import 'package:biblia/presentation/viewmodels/book_viewmodel.dart';
 import 'package:biblia/presentation/widgets/grid_list_items_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class ListBooksPage extends StatefulWidget {

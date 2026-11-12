@@ -1,6 +1,6 @@
 import 'package:biblia/core/utils/app_error_handler.dart';
 import 'package:biblia/domain/usecases/get_chapters_usecase.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 class ChapterViewModel extends ChangeNotifier {
   final GetChaptersUseCase _getChaptersUseCase;

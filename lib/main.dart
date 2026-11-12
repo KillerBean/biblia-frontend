@@ -1,6 +1,6 @@
 import 'package:biblia/core/di/book_module.dart';
 import 'package:biblia/presentation/widgets/main_app_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 

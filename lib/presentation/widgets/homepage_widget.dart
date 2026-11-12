@@ -1,7 +1,7 @@
 import 'package:biblia/core/utils/config_service.dart';
 import 'package:biblia/presentation/views/lists/book.dart';
 import 'package:biblia/presentation/widgets/search_delegate_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class HomePageWidget extends StatefulWidget {

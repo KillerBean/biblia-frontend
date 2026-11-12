@@ -3,7 +3,7 @@ import 'package:biblia/domain/entities/book.dart';
 import 'package:biblia/domain/entities/testament.dart';
 import 'package:biblia/domain/usecases/get_books_usecase.dart';
 import 'package:biblia/domain/usecases/get_testaments_usecase.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 class BookViewModel extends ChangeNotifier {
   final GetBooksUseCase _getBooksUseCase;

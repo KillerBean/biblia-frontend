@@ -1,7 +1,7 @@
 import 'package:biblia/core/utils/app_error_handler.dart';
 import 'package:biblia/domain/entities/verse.dart';
 import 'package:biblia/domain/usecases/get_verses_usecase.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 class VerseViewModel extends ChangeNotifier {
   final GetVersesUseCase _getVersesUseCase;

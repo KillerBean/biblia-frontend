@@ -37,11 +37,8 @@ jobs:
 
       - name: Set up Flutter
         uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
-        # Versão fixa: o 3.50 deprecia package:flutter/material.dart e quebra o
-        # `analyze --fatal-infos`. Subir de propósito (migração p/ material_ui).
         with:
           channel: stable
-          flutter-version: 3.47.9
           cache: true
 
       - name: Install dependencies

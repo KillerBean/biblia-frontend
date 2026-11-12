@@ -7,15 +7,9 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await WakelockPlus.enable();
-  runApp(ModularApp(module: AppModule(), child: const MainAppWidget()));
+  runApp(ModularApp(module: appModule, child: const MainAppWidget()));
 }
 
-class AppModule extends Module {
-  @override
-  void binds(i) {}
-
-  @override
-  void routes(r) {
-    r.module("/", module: BookModule());
-  }
-}
+final appModule = createModule(register: (c) {
+  c.module(bookModule);
+});

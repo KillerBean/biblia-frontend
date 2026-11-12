@@ -18,7 +18,7 @@ class ListVersesPage extends StatefulWidget {
 }
 
 class _ListVersesPageState extends State<ListVersesPage> {
-  final VerseViewModel viewModel = Modular.get<VerseViewModel>();
+  final VerseViewModel viewModel = inject<VerseViewModel>();
 
   @override
   void initState() {

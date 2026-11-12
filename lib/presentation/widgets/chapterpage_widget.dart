@@ -19,7 +19,7 @@ class ChapterPageWidget extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primary,
           leading: IconButton(
-              onPressed: () => Modular.to.pop(),
+              onPressed: () => context.pop(),
               icon: const Icon(CupertinoIcons.return_icon)),
         ),
         body: ListVersesPage(

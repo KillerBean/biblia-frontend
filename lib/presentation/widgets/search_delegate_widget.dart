@@ -7,7 +7,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class BibleSearchDelegate extends SearchDelegate {
-  final SearchViewModel viewModel = Modular.get<SearchViewModel>();
+  final SearchViewModel viewModel = inject<SearchViewModel>();
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -77,7 +77,7 @@ class BibleSearchDelegate extends SearchDelegate {
               subtitle: Text(
                   '${verse.bookName ?? verse.bookId} ${verse.chapter}:${verse.verse}'),
               onTap: () {
-                Modular.to.pushNamed(
+                context.pushNamed(
                   '/book/${verse.bookId}/${verse.chapter}?verseId=${verse.verse}',
                 );
               },
@@ -104,7 +104,7 @@ class BibleSearchDelegate extends SearchDelegate {
 
           final highlightParam = highlights.join(',');
 
-          Modular.to.pushNamed(
+          context.pushNamed(
             '/book/$bookId/${ref.chapter}?highlight=$highlightParam',
           );
         },

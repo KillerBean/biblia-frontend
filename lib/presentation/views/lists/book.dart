@@ -11,7 +11,7 @@ class ListBooksPage extends StatefulWidget {
 }
 
 class _ListBooksPageState extends State<ListBooksPage> {
-  final BookViewModel viewModel = Modular.get<BookViewModel>();
+  final BookViewModel viewModel = inject<BookViewModel>();
 
   @override
   void initState() {

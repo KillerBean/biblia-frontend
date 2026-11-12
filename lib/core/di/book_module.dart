@@ -20,72 +20,68 @@ import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-class BookModule extends Module {
-  @override
-  void binds(i) {
-    // Config and Network
-    i.addLazySingleton<ConfigService>(SharedPrefConfigService.new);
-    i.addLazySingleton(() {
-      final dio = Dio(BaseOptions(
-        connectTimeout: const Duration(seconds: 10),
-        receiveTimeout: const Duration(seconds: 15),
-        sendTimeout: const Duration(seconds: 10),
+/// Módulo sem `path`: binds no injetor raiz (vivem o app todo) e rotas na raiz.
+final bookModule = createModule(register: (c) {
+  // Config and Network
+  c.addLazySingleton<ConfigService>(SharedPrefConfigService.new);
+  c.addLazySingleton<Dio>(() {
+    final dio = Dio(BaseOptions(
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 15),
+      sendTimeout: const Duration(seconds: 10),
+    ));
+    dio.interceptors.add(HttpsInterceptor());
+    return dio;
+  });
+  c.addLazySingleton<BibliaRemoteDataSource>(() => BibliaRemoteDataSource(
+        baseUrl: const String.fromEnvironment('API_BASE_URL'),
       ));
-      dio.interceptors.add(HttpsInterceptor());
-      return dio;
-    });
-    i.addLazySingleton(() => BibliaRemoteDataSource(
-          baseUrl: const String.fromEnvironment('API_BASE_URL'),
-        ));
 
-    // Repository
-    i.addLazySingleton<DatabaseRepository>(FallbackDatabaseRepository.new);
+  // Repository
+  c.addLazySingleton<DatabaseRepository>(FallbackDatabaseRepository.new);
 
-    // UseCases
-    i.addLazySingleton(GetBooksUseCase.new);
-    i.addLazySingleton(GetTestamentsUseCase.new);
-    i.addLazySingleton(GetChaptersUseCase.new);
-    i.addLazySingleton(GetVersesUseCase.new);
-    i.addLazySingleton(SearchVersesUseCase.new);
+  // UseCases
+  c.addLazySingleton<GetBooksUseCase>(GetBooksUseCase.new);
+  c.addLazySingleton<GetTestamentsUseCase>(GetTestamentsUseCase.new);
+  c.addLazySingleton<GetChaptersUseCase>(GetChaptersUseCase.new);
+  c.addLazySingleton<GetVersesUseCase>(GetVersesUseCase.new);
+  c.addLazySingleton<SearchVersesUseCase>(SearchVersesUseCase.new);
 
-    // ViewModels
-    i.add(() => BookViewModel(i.get(), i.get()));
-    i.add(() => ChapterViewModel(i.get()));
-    i.add(() => VerseViewModel(i.get()));
-    i.add(() => SearchViewModel(i.get()));
-  }
+  // ViewModels (factory: nova instância por tela)
+  c.add<BookViewModel>(BookViewModel.new);
+  c.add<ChapterViewModel>(ChapterViewModel.new);
+  c.add<VerseViewModel>(VerseViewModel.new);
+  c.add<SearchViewModel>(SearchViewModel.new);
 
-  @override
-  void routes(r) {
-    r.child('/',
-        child: (context) => const HomePageWidget(title: "Bíblia Sagrada"));
-    r.child('/book/:bookid', child: (context) {
-      final bookId = int.tryParse(r.args.params["bookid"] ?? '') ?? 0;
-      if (bookId <= 0) return const SizedBox.shrink();
-      return BookPageWidget(bookId: bookId);
-    });
-    r.child('/book/:bookid/:chapterid', child: (context) {
-      final bookId = int.tryParse(r.args.params["bookid"] ?? '') ?? 0;
-      final chapterId = int.tryParse(r.args.params["chapterid"] ?? '') ?? 0;
-      if (bookId <= 0 || chapterId <= 0) return const SizedBox.shrink();
+  c.route('/',
+      child: (context, state) =>
+          const HomePageWidget(title: "Bíblia Sagrada"));
+  c.route('/book/:bookid', child: (context, state) {
+    final bookId = int.tryParse(state.params["bookid"] ?? '') ?? 0;
+    if (bookId <= 0) return const SizedBox.shrink();
+    return BookPageWidget(bookId: bookId);
+  });
+  c.route('/book/:bookid/:chapterid', child: (context, state) {
+    final bookId = int.tryParse(state.params["bookid"] ?? '') ?? 0;
+    final chapterId = int.tryParse(state.params["chapterid"] ?? '') ?? 0;
+    if (bookId <= 0 || chapterId <= 0) return const SizedBox.shrink();
 
-      final highlightParam = r.args.queryParams['highlight'];
-      final verseIdParam = r.args.queryParams['verseId'];
+    final highlightParam = state.query['highlight'];
+    final verseIdParam = state.query['verseId'];
 
-      List<int>? highlights;
-      if (highlightParam != null && highlightParam.isNotEmpty) {
-        highlights = highlightParam
-            .split(',')
-            .map((e) => int.tryParse(e))
-            .whereType<int>()
-            .toList();
-      } else if (verseIdParam != null && verseIdParam.isNotEmpty) {
-        final v = int.tryParse(verseIdParam);
-        if (v != null) highlights = [v];
-      }
+    List<int>? highlights;
+    if (highlightParam != null && highlightParam.isNotEmpty) {
+      highlights = highlightParam
+          .split(',')
+          .map((e) => int.tryParse(e))
+          .whereType<int>()
+          .toList();
+    } else if (verseIdParam != null && verseIdParam.isNotEmpty) {
+      final v = int.tryParse(verseIdParam);
+      if (v != null) highlights = [v];
+    }
 
-      return ChapterPageWidget(
-          bookId: bookId, chapterId: chapterId, highlightedVerses: highlights);
-    });
-  }
-}
+    return ChapterPageWidget(
+        bookId: bookId, chapterId: chapterId, highlightedVerses: highlights);
+  });
+});

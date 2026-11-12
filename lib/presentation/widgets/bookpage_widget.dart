@@ -12,7 +12,7 @@ class BookPageWidget extends StatefulWidget {
 }
 
 class _BookPageWidgetState extends State<BookPageWidget> {
-  final ChapterViewModel viewModel = Modular.get<ChapterViewModel>();
+  final ChapterViewModel viewModel = inject<ChapterViewModel>();
 
   @override
   void initState() {
@@ -26,7 +26,7 @@ class _BookPageWidgetState extends State<BookPageWidget> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         leading: IconButton(
-            onPressed: () => Modular.to.pop(),
+            onPressed: () => context.pop(),
             icon: const Icon(CupertinoIcons.return_icon)),
       ),
       body: AnimatedBuilder(
@@ -56,7 +56,7 @@ class _BookPageWidgetState extends State<BookPageWidget> {
               ),
               itemBuilder: (_, index) => GestureDetector(
                 onTap: () {
-                  Modular.to.pushNamed("/book/${widget.bookId}/${index + 1}");
+                  context.pushNamed("/book/${widget.bookId}/${index + 1}");
                 },
                 child: Center(
                   child: Container(

@@ -16,7 +16,7 @@ class MainAppWidget extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      routerConfig: Modular.routerConfig,
+      routerConfig: ModularApp.routerConfigOf(context),
     );
   }
 }

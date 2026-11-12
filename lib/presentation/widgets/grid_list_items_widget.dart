@@ -46,7 +46,7 @@ class _GridListItemsWidgetState extends State<GridListItemsWidget> {
           onTap: () {
             if (widget.path != null) {
               final itemId = _toMap(widget.items[index])['id'];
-              Modular.to.pushNamed("/${widget.path}/$itemId");
+              context.pushNamed("/${widget.path}/$itemId");
             }
           },
           child: Center(

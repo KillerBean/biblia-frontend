@@ -75,7 +75,7 @@ jobs:
           fetch-depth: 0
 
       - name: TruffleHog scan
-        uses: trufflesecurity/trufflehog@188766766fd81cde66e5500b0db0379235637134 # main
+        uses: trufflesecurity/trufflehog@db665f0c24c63a536220e0e4a3ec9b9dc250e6be # main
         with:
           base: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
           head: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
